@@ -1,0 +1,157 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Party Street</title>
+<style>
+  @keyframes dance {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+  @keyframes lights {
+    0%, 100% { background-color: #ff0000; }
+    25% { background-color: #00ff00; }
+    50% { background-color: #0000ff; }
+    75% { background-color: #ffff00; }
+  }
+  @keyframes streetGlow {
+    0%, 100% { box-shadow: 0 0 10px #ff0000; }
+    25% { box-shadow: 0 0 10px #00ff00; }
+    50% { box-shadow: 0 0 10px #0000ff; }
+    75% { box-shadow: 0 0 10px #ffff00; }
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100vh;
+    background-color: #000033;
+    margin: 0;
+    padding-bottom: 50px;
+    perspective: 1000px;
+  }
+  .street {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    height: 50px;
+    background-color: #444;
+    animation: streetGlow 2s infinite;
+    transform: translateZ(-500px) rotateX(45deg);
+  }
+  .street::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: repeating-linear-gradient(90deg, transparent, transparent 20px, white 20px, white 40px);
+    transform: translateY(-50%);
+  }
+  .house {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background-color: #2E1A0F;
+    transform-style: preserve-3d;
+  }
+  .house.party {
+    animation: lights 2s infinite;
+  }
+  .roof {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-left: 100px solid transparent;
+    border-right: 100px solid transparent;
+    border-bottom: 100px solid #A52A2A;
+  }
+  .door {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 100px;
+    background-color: #654321;
+  }
+  .window {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-color: #ADD8E6;
+  }
+  .window.left {
+    top: 50px;
+    left: 20px;
+  }
+  .window.right {
+    top: 50px;
+    right: 20px;
+  }
+  .dancer {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 50px;
+    background-color: #FFD700;
+    animation: dance 0.5s infinite;
+  }
+  .street-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    transform: translateZ(-500px) rotateX(45deg);
+  }
+  .house:nth-child(1) { transform: rotateY(-30deg) translateX(-200px); }
+  .house:nth-child(2) { transform: rotateY(-15deg) translateX(-100px); }
+  .house:nth-child(3) { transform: rotateY(0deg); }
+  .house:nth-child(4) { transform: rotateY(15deg) translateX(100px); }
+  .house:nth-child(5) { transform: rotateY(30deg) translateX(200px); }
+</style>
+</head>
+<body>
+  <div class="street-container">
+    <div class="house">
+      <div class="roof"></div>
+      <div class="door"></div>
+      <div class="window left"></div>
+      <div class="window right"></div>
+    </div>
+    <div class="house">
+      <div class="roof"></div>
+      <div class="door"></div>
+      <div class="window left"></div>
+      <div class="window right"></div>
+    </div>
+    <div class="house party">
+      <div class="roof"></div>
+      <div class="door"></div>
+      <div class="window left"></div>
+      <div class="window right"></div>
+      <div class="dancer"></div>
+    </div>
+    <div class="house">
+      <div class="roof"></div>
+      <div class="door"></div>
+      <div class="window left"></div>
+      <div class="window right"></div>
+    </div>
+    <div class="house">
+      <div class="roof"></div>
+      <div class="door"></div>
+      <div class="window left"></div>
+      <div class="window right"></div>
+    </div>
+  </div>
+  <div class="street"></div>
+</body>
+</html>

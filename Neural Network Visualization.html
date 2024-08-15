@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Network Visualization</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black;
+        }
+        svg {
+            background-color: transparent;
+        }
+        circle {
+            transition: fill 0.5s;
+            cursor: pointer;
+        }
+        line {
+            stroke-width: 4;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <svg id="neuralNetwork" width="800" height="600"></svg>
+
+    <script>
+        const svg = document.getElementById('neuralNetwork');
+
+        const layers = [
+            { neurons: 3, x: 100 },
+            { neurons: 4, x: 300 },
+            { neurons: 4, x: 500 },
+            { neurons: 2, x: 700 }
+        ];
+
+        const neuronRadius = 20;
+        const verticalSpacing = 80;
+
+        function interpolateColor(color1, color2, factor) {
+            const result = color1.slice();
+            for (let i = 0; i < 3; i++) {
+                result[i] = Math.round(result[i] + factor * (color2[i] - color1[i]));
+            }
+            return result;
+        }
+
+        function colorToHex(color) {
+            return '#' + color.map(x => x.toString(16).padStart(2, '0')).join('');
+        }
+
+        function drawNeuron(x, y, value) {
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", x);
+            circle.setAttribute("cy", y);
+            circle.setAttribute("r", neuronRadius);
+            circle.setAttribute("fill", value === 1 ? "magenta" : "indigo");
+            circle.addEventListener('click', () => {
+                value = 1 - value;
+                circle.setAttribute("fill", value === 1 ? "magenta" : "indigo");
+            });
+            return circle;
+        }
+
+        function drawConnection(x1, y1, x2, y2, weight) {
+            const colors = {
+                "-1": [219, 0, 115], // cerise
+                "0": [255, 255, 255], // white
+                "1": [0, 255, 255] // cyan
+            };
+            const strokeColor = colorToHex(colors[weight]);
+
+            const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", strokeColor);
+            line.setAttribute("stroke-width", 4);
+            line.addEventListener('click', () => {
+                weight = (weight + 2) % 3 - 1; // cycle through -1, 0, 1
+                line.setAttribute("stroke", colorToHex(colors[weight]));
+            });
+            return line;
+        }
+
+        let connections = [];
+        let neuronElements = [];
+
+        layers.forEach((layer, layerIndex) => {
+            const yOffset = (svg.height.baseVal.value - (layer.neurons - 1) * verticalSpacing) / 2;
+            layer.neuronsPos = [];
+            layer.neuronsValues = [];
+            layer.neuronsElems = [];
+
+            for (let i = 0; i < layer.neurons; i++) {
+                const y = yOffset + i * verticalSpacing;
+                const value = Math.random() > 0.5 ? 1 : 0;
+                const neuronElem = drawNeuron(layer.x, y, value);
+                layer.neuronsPos.push({ x: layer.x, y: y });
+                layer.neuronsValues.push(value);
+                layer.neuronsElems.push(neuronElem);
+                neuronElements.push(neuronElem);
+            }
+
+            if (layerIndex > 0) {
+                const prevLayer = layers[layerIndex - 1];
+                prevLayer.neuronsPos.forEach((prevNeuron, prevIndex) => {
+                    layer.neuronsPos.forEach((neuron, index) => {
+                        const weight = Math.floor(Math.random() * 3) - 1; // random weight between -1 and 1
+                        connections.push({
+                            from: prevLayer.neuronsValues[prevIndex],
+                            toIndex: index,
+                            weight: weight,
+                            line: drawConnection(prevNeuron.x, prevNeuron.y, neuron.x, neuron.y, weight)
+                        });
+                    });
+                });
+            }
+        });
+
+        connections.forEach(conn => {
+            svg.appendChild(conn.line);
+        });
+
+        neuronElements.forEach(neuronElem => {
+            svg.appendChild(neuronElem);
+        });
+
+        function updateNetwork() {
+            layers.forEach((layer, layerIndex) => {
+                if (layerIndex > 0) {
+                    const prevLayer = layers[layerIndex - 1];
+                    layer.neuronsValues = layer.neuronsValues.map((value, index) => {
+                        const sum = connections
+                            .filter(conn => conn.toIndex === index)
+                            .reduce((acc, conn) => acc + conn.from * conn.weight, 0);
+                        return sum > 0.5 ? 1 : 0;
+                    });
+                }
+            });
+
+            layers.forEach(layer => {
+                layer.neuronsElems.forEach((neuronElem, index) => {
+                    const newValue = layer.neuronsValues[index];
+                    neuronElem.setAttribute("fill", newValue === 1 ? "magenta" : "indigo");
+                });
+            });
+        }
+
+        setInterval(updateNetwork, 1000);
+    </script>
+</body>
+</html>

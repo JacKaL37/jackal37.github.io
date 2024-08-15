@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Tree Visualization</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+        }
+        .node {
+            fill: #ff00ff; /* magenta */
+            cursor: pointer;
+        }
+        .node text {
+            fill: #00ffff; /* cyan */
+        }
+        .node:hover {
+            fill: #4b0082; /* indigo */
+        }
+        #info-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="info-box"></div>
+    <svg id="svgCanvas" width="100%" height="100%"></svg>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script>
+        const data = {
+            name: "Document",
+            content: "This is a simple markdown document.",
+            children: [
+                {
+                    name: "Section 1",
+                    content: "This is the first section.",
+                    children: [
+                        {
+                            name: "Subsection 1.1",
+                            content: "This is the first subsection of section 1.",
+                            children: []
+                        },
+                        {
+                            name: "Subsection 1.2",
+                            content: "This is the second subsection of section 1.",
+                            children: []
+                        }
+                    ]
+                },
+                {
+                    name: "Section 2",
+                    content: "This is the second section.",
+                    children: [
+                        {
+                            name: "Subsection 2.1",
+                            content: "This is the first subsection of section 2.",
+                            children: []
+                        }
+                    ]
+                }
+            ]
+        };
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const svg = d3.select("#svgCanvas").attr("viewBox", [0, 0, width, height]);
+
+        const treeLayout = d3.tree().size([height, (width - 160) / 3]);
+        const root = d3.hierarchy(data);
+        treeLayout(root);
+
+        const link = svg.append("g")
+            .attr("fill", "none")
+            .attr("stroke", "#00ffff")
+            .attr("stroke-width", 2)
+            .selectAll("path")
+            .data(root.links())
+            .join("path")
+            .attr("d", d3.linkHorizontal()
+                .x(d => d.y)
+                .y(d => d.x));
+
+        const node = svg.append("g")
+            .selectAll("g")
+            .data(root.descendants())
+            .join("g")
+            .attr("transform", d => `translate(${d.y},${d.x})`)
+            .attr("class", "node")
+            .on("click", (event, d) => {
+                d3.select("#info-box").style("display", "block").html(`
+                    <strong>${d.data.name}</strong><br>
+                    ${d.data.content}
+                `);
+                svg.transition().duration(750).attr("viewBox", [
+                    d.y - width / 2,
+                    d.x - height / 2,
+                    width,
+                    height
+                ]);
+            });
+
+        node.append("circle")
+            .attr("r", 15); // Increased radius of nodes
+
+        node.append("text")
+            .attr("dy", "-1.5em") // Moved text above the nodes
+            .attr("x", 0)
+            .attr("text-anchor", "middle")
+            .text(d => d.data.name);
+
+        // Center the view on the "Document" node after the scene loads
+        svg.transition().duration(750).attr("viewBox", [
+            root.y - width / 2,
+            root.x - height / 2,
+            width,
+            height
+        ]);
+    </script>
+</body>
+</html>

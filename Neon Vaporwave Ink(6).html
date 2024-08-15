@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Vaporwave Ink</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        .palette {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .color-box {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="palette" id="palette"></div>
+<canvas id="canvas"></canvas>
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particlesArray = [];
+    let recording = false;
+    let recordedPattern = [];
+    let playbackIndex = 0;
+    let colorIndex = 0;
+
+    const colorPalettes = [
+        ['#FF00FF', '#00FFFF', '#FF00FF', '#00FFFF'],
+        ['#FF5733', '#33FF57', '#3357FF', '#FF33A1'],
+        ['#FFC300', '#DAF7A6', '#FF5733', '#C70039'],
+        ['#581845', '#900C3F', '#C70039', '#FF5733'],
+        ['#1F618D', '#1ABC9C', '#F1C40F', '#E74C3C']
+    ];
+
+    function updatePaletteDisplay() {
+        const paletteDiv = document.getElementById('palette');
+        paletteDiv.innerHTML = '';
+        colorPalettes[colorIndex].forEach(color => {
+            const colorBox = document.createElement('div');
+            colorBox.className = 'color-box';
+            colorBox.style.backgroundColor = color;
+            paletteDiv.appendChild(colorBox);
+        });
+    }
+
+    class Particle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 15 + 1;
+            this.speedX = Math.random() * 3 - 1.5;
+            this.speedY = Math.random() * 3 - 1.5;
+            this.color = colorPalettes[colorIndex][Math.floor(Math.random() * colorPalettes[colorIndex].length)];
+            this.alpha = 1;
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+            if (this.size > 0.2) this.size -= 0.1;
+            if (this.alpha > 0.02) this.alpha -= 0.02;
+        }
+        draw() {
+            ctx.fillStyle = this.color;
+            ctx.globalAlpha = this.alpha;
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    function handleParticles() {
+        for (let i = 0; i < particlesArray.length; i++) {
+            particlesArray[i].update();
+            particlesArray[i].draw();
+            for (let j = i; j < particlesArray.length; j++) {
+                const dx = particlesArray[i].x - particlesArray[j].x;
+                const dy = particlesArray[i].y - particlesArray[j].y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 100) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = particlesArray[i].color;
+                    ctx.lineWidth = 0.2;
+                    ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
+                    ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
+                    ctx.stroke();
+                    ctx.closePath();
+                }
+            }
+            if (particlesArray[i].size <= 0.3 || particlesArray[i].alpha <= 0.02) {
+                particlesArray.splice(i, 1);
+                i--;
+            }
+        }
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        handleParticles();
+        if (!recording && recordedPattern.length > 0) {
+            const event = recordedPattern[playbackIndex];
+            for (let i = 0; i < 5; i++) {
+                particlesArray.push(new Particle(event.x, event.y));
+            }
+            playbackIndex = (playbackIndex + 1) % recordedPattern.length;
+        }
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('mousemove', (event) => {
+        if (recording) {
+            recordedPattern.push({ x: event.x, y: event.y });
+        }
+        for (let i = 0; i < 5; i++) {
+            particlesArray.push(new Particle(event.x, event.y));
+        }
+    });
+
+    window.addEventListener('mousedown', () => {
+        recording = true;
+        recordedPattern = [];
+    });
+
+    window.addEventListener('mouseup', () => {
+        recording = false;
+        playbackIndex = 0;
+    });
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    window.addEventListener('wheel', (event) => {
+        if (event.deltaY > 0) {
+            colorIndex = (colorIndex + 1) % colorPalettes.length;
+        } else {
+            colorIndex = (colorIndex - 1 + colorPalettes.length) % colorPalettes.length;
+        }
+        updatePaletteDisplay();
+    });
+
+    updatePaletteDisplay();
+    animate();
+</script>
+</body>
+</html>
