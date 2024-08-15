@@ -138,13 +138,30 @@
             particlesArray.push(new Particle(event.x, event.y));
         }
     });
+    window.addEventListener('touchmove', (event) => {
+        const touch = event.touches[0];
+        if (recording) {
+            recordedPattern.push({ x: touch.clientX, y: touch.clientY });
+        }
+        for (let i = 0; i < 5; i++) {
+            particlesArray.push(new Particle(touch.clientX, touch.clientY));
+        }
+    });
 
     window.addEventListener('mousedown', () => {
         recording = true;
         recordedPattern = [];
     });
+    window.addEventListener('touchstart', () => {
+        recording = true;
+        recordedPattern = [];
+    });
 
     window.addEventListener('mouseup', () => {
+        recording = false;
+        playbackIndex = 0;
+    });
+    window.addEventListener('touchend', () => {
         recording = false;
         playbackIndex = 0;
     });
