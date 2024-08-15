@@ -10,3 +10,4 @@ Some of the fidgety digital bullshiit I've created:
 - [inkstroke](digitalFidgets/inkstroke.html)
 - [fireflies](digitalFidgets/fireflies.html)
 - [tinkleboom](digitalFidgets/tinkleboom.html)
+- [doctree](digitalFidgets/doctree.html)
