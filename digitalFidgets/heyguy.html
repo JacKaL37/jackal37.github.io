@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbox</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        #chatbox {
+            width: 80%;
+            max-width: 600px;
+            height: 60vh;
+            background-color: #4B0082;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .bubble {
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px;
+            max-width: 80%;
+            word-wrap: break-word;
+            border: 2px solid;
+        }
+        .user {
+            background-color: rgba(255, 0, 255, 0.1);
+            border-color: #FF00FF;
+            align-self: flex-end;
+        }
+        .assistant {
+            background-color: rgba(0, 255, 255, 0.1);
+            border-color: #00FFFF;
+            align-self: flex-start;
+        }
+        #inputArea {
+            width: 80%;
+            max-width: 600px;
+            display: flex;
+            margin-top: 10px;
+        }
+        #messageInput {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #FF006E;
+            border-radius: 10px 0 0 10px;
+            background-color: #4B0082;
+            color: #FFFFFF;
+        }
+        #sendButton {
+            padding: 10px;
+            border: none;
+            background-color: #FF006E;
+            color: #FFFFFF;
+            cursor: pointer;
+            border-radius: 0 10px 10px 0;
+        }
+        #apiKey {
+            width: 80%;
+            max-width: 600px;
+            padding: 10px;
+            border: 2px solid #FF006E;
+            border-radius: 10px;
+            background-color: #4B0082;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <input type="password" id="apiKey" v-model="apiKey" placeholder="Enter your OpenAI API Key">
+        <div id="chatbox">
+            <div v-for="message in messages" :class="['bubble', message.role === 'user' ? 'user' : 'assistant']">{{ message.content }}</div>
+        </div>
+        <div id="inputArea">
+            <input type="text" id="messageInput" v-model="messageInput" placeholder="Type your message..." @keypress.enter="sendMessage">
+            <button id="sendButton" @click="sendMessage">Send</button>
+        </div>
+    </div>
+    <script type="module">
+        import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js';
+        import OpenAI from 'https://cdn.jsdelivr.net/npm/openai/+esm';
+
+        createApp({
+            setup() {
+                const messages = ref([]);
+                const messageInput = ref('');
+                const apiKey = ref('');
+                const appendMessage = (content, role) => {
+                    messages.value.push({ content, role });
+                    setTimeout(() => {
+                        const chatbox = document.getElementById('chatbox');
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                    }, 0);
+                };
+                const sendMessage = async () => {
+                    if (messageInput.value.trim() !== '') {
+                        appendMessage(messageInput.value, 'user');
+                        const userMessage = messageInput.value;
+                        messageInput.value = '';
+                        await assistantReply(userMessage);
+                    }
+                };
+                const assistantReply = async (userMessage) => {
+                    if (!apiKey.value) {
+                        appendMessage('Please enter your OpenAI API key.', 'assistant');
+                        return;
+                    }
+                    appendMessage('Thinking...', 'assistant');
+                    const openai = new OpenAI({ apiKey: apiKey.value, dangerouslyAllowBrowser: true });
+                    try {
+                        const completion = await openai.chat.completions.create({
+                            messages: [
+                                { role: "system", content: "You are a helpful assistant." },
+                                ...messages.value
+                            ],
+                            model: "gpt-4",
+                        });
+                        messages.value[messages.value.length - 1].content = completion.choices[0].message.content;
+                    } catch (error) {
+                        messages.value[messages.value.length - 1].content = 'Error: ' + error.message;
+                    }
+                };
+                return {
+                    messages,
+                    messageInput,
+                    apiKey,
+                    sendMessage,
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
