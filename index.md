@@ -14,3 +14,4 @@ Some of the fidgety digital bullshiit I've created:
 - [palettest](digitalFidgets/palettest.html)
 - [binauralfreak](digitalFidgets/binauralfreak.html)
 - [heyguy](digitalFidgets/heyguy.html)
+- [featurecreep](digitalFidgets/featurecreep.html) - this one's all gpt-4o. i just cheered it on telling it to add more features. 
