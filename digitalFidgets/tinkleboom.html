@@ -121,7 +121,7 @@
         function getColorFromSpeedAndDirection(normalizedSpeed, direction) {
             const angle = (direction + Math.PI) * (180 / Math.PI);
             const magnitude = Math.round(normalizedSpeed * 255);
-            if (magnitude === 0) return 'rgb(16,16,16)'; // Dark gray for stationary
+            if (magnitude === 0) return 'rgb(64,64,64)'; // Dark gray for stationary
 
             const colors = [                
                 { r: 175, g: 0, b: 230 },       // Left (Indigo)
@@ -140,7 +140,7 @@
             const g = color1.g + t * (color2.g - color1.g);
             const b = color1.b + t * (color2.b - color1.b);
 
-            return `rgb(${Math.round(16 + r * (magnitude / 239))}, ${Math.round(16 + g * (magnitude / 239))}, ${Math.round(16 + b * (magnitude / 239))})`;
+            return `rgb(${Math.round(64 + r * (magnitude / 191))}, ${Math.round(64 + g * (magnitude / 191))}, ${Math.round(64 + b * (magnitude / 191))})`;
         }
 
         function initParticles() {
