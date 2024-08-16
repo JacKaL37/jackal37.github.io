@@ -1,0 +1,369 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Colorful Circles</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000000;
+      color: #FFFFFF;
+    }
+    canvas {
+      display: block;
+    }
+    #controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: #FFFFFF;
+      z-index: 10;
+    }
+    .button {
+      background-color: #4B0082;
+      color: #FFFFFF;
+      border: none;
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #FF00FF;
+    }
+    #speedControl,
+    #gravityControl,
+    #radiusControl,
+    #bounceFactorControl,
+    #colorControl {
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="controls">
+    <button class="button" onclick="addCircle()">Add Circle</button>
+    <button class="button" onclick="removeCircle()">Remove Circle</button>
+    <button class="button" onclick="toggleAnimation()">Toggle Animation</button>
+    <button class="button" onclick="changeColors()">Change Colors</button>
+    <label for="speedControl">Speed: </label>
+    <input type="range" id="speedControl" min="1" max="10" value="2" oninput="changeSpeed(this.value)">
+    <br>
+    <label for="gravityControl">Gravity: </label>
+    <input type="range" id="gravityControl" min="0" max="2" step="0.1" value="0.1" oninput="changeGravity(this.value)">
+    <br>
+    <label for="radiusControl">Radius: </label>
+    <input type="range" id="radiusControl" min="5" max="50" value="10" oninput="changeRadius(this.value)">
+    <br>
+    <label for="bounceFactorControl">Bounce Factor: </label>
+    <input type="range" id="bounceFactorControl" min="0.1" max="1.0" step="0.1" value="0.9" oninput="changeBounceFactor(this.value)">
+    <br>
+    <label for="colorControl">Circle Color: </label>
+    <input type="color" id="colorControl" value="#FF00FF" oninput="changeCircleColor(this.value)">
+    <br>
+    <button class="button" onclick="toggleTrail()">Toggle Trail</button>
+    <button class="button" onclick="downloadCanvas()">Save Snapshot</button>
+    <button class="button" onclick="resetCircles()">Reset Circles</button>
+    <button class="button" onclick="changeToRandomColors()">Randomize Colors</button>
+    <button class="button" onclick="toggleCircleGrowth()">Toggle Circle Growth</button>
+    <button class="button" onclick="toggleCircleShrink()">Toggle Circle Shrink</button>
+    <button class="button" onclick="toggleCircleRotation()">Toggle Circle Rotation</button>
+    <button class="button" onclick="toggleColorShift()">Toggle Color Shift</button>
+    <button class="button" onclick="toggleBackgroundMusic()">Toggle Background Music</button>
+    <button class="button" onclick="toggleGravityInversion()">Toggle Gravity Inversion</button>
+    <button class="button" onclick="toggleCircleWarp()">Toggle Circle Warp</button>
+  </div>
+  <canvas id="canvas"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#FF00FF', '#00FFFF', '#FF006E'];
+    let circles = [];
+    let animationActive = true;
+    let speedMultiplier = 2;
+    let gravity = 0.1;
+    let newCircleRadius = 10;
+    let bounceFactor = 0.9;
+    let trailEffect = false;
+    let circleColor = '#FF00FF';
+    let growthActive = false;
+    let shrinkActive = false;
+    let rotationActive = false;
+    let colorShiftActive = false;
+    let backgroundMusicActive = false;
+    let gravityInversionActive = false;
+    let warpActive = false;
+    let angle = 0;
+
+    const audio = new Audio('https://www.bensound.com/bensound-music/bensound-dubstep.mp3');
+
+    function randomIntFromRange(min, max) {
+      return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function Circle(x, y, dx, dy, radius, color) {
+      this.x = x;
+      this.y = y;
+      this.dx = dx;
+      this.dy = dy;
+      this.radius = radius;
+      this.color = color;
+
+      this.draw = function() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        if (rotationActive) {
+          ctx.rotate(angle);
+        }
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2, false);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+        ctx.restore();
+      };
+
+      this.update = function() {
+        if (this.x + this.radius > canvas.width || this.x - this.radius < 0) {
+          this.dx = -this.dx;
+        }
+        if (this.y + this.radius > canvas.height || this.y - this.radius < 0) {
+          this.dy = -this.dy * bounceFactor; // simulate bounce effect by reducing speed
+        } else {
+          this.dy += gravity; // apply gravity
+        }
+        this.x += this.dx * speedMultiplier;
+        this.y += this.dy * speedMultiplier;
+
+        if (growthActive) {
+          this.radius += 0.1;
+        }
+        if (shrinkActive) {
+          this.radius -= 0.1;
+          if (this.radius < 1) {
+            this.radius = 1;
+          }
+        }
+        if (colorShiftActive) {
+          this.color = getRandomColor();
+        }
+        if (warpActive) {
+          this.x = (this.x + canvas.width) % canvas.width;
+          this.y = (this.y + canvas.height) % canvas.height;
+        }
+
+        this.draw();
+      };
+    }
+
+    function init() {
+      circles = [];
+      for (let i = 0; i < 100; i++) {
+        let radius = randomIntFromRange(10, 30);
+        let x = randomIntFromRange(radius, canvas.width - radius);
+        let y = randomIntFromRange(radius, canvas.height - radius);
+        let dx = randomIntFromRange(-2, 2);
+        let dy = randomIntFromRange(-2, 2);
+        let color = colors[Math.floor(Math.random() * colors.length)];
+        circles.push(new Circle(x, y, dx, dy, radius, color));
+      }
+    }
+
+    function addCircle() {
+      let radius = newCircleRadius;
+      let x = randomIntFromRange(radius, canvas.width - radius);
+      let y = randomIntFromRange(radius, canvas.height - radius);
+      let dx = randomIntFromRange(-2, 2);
+      let dy = randomIntFromRange(-2, 2);
+      circles.push(new Circle(x, y, dx, dy, radius, circleColor));
+    }
+
+    function removeCircle() {
+      circles.pop();
+    }
+
+    function toggleAnimation() {
+      animationActive = !animationActive;
+      if (animationActive) {
+        animate();
+      }
+    }
+
+    function changeColors() {
+      circles.forEach(circle => {
+        circle.color = colors[Math.floor(Math.random() * colors.length)];
+      });
+    }
+
+    function changeSpeed(value) {
+      speedMultiplier = value;
+    }
+
+    function changeGravity(value) {
+      gravity = parseFloat(value);
+      if (gravityInversionActive) {
+        gravity = -gravity;
+      }
+    }
+
+    function changeRadius(value) {
+      newCircleRadius = parseFloat(value);
+    }
+
+    function changeBounceFactor(value) {
+      bounceFactor = parseFloat(value);
+    }
+
+    function changeCircleColor(value) {
+      circleColor = value;
+    }
+
+    function toggleTrail() {
+      trailEffect = !trailEffect;
+    }
+
+    function downloadCanvas() {
+      const link = document.createElement('a');
+      link.download = 'snapshot.png';
+      link.href = canvas.toDataURL();
+      link.click();
+    }
+
+    function resetCircles(){
+      init();
+    }
+
+    function changeToRandomColors() {
+      circles.forEach(circle => {
+        circle.color = getRandomColor();
+      });
+    }
+
+    function toggleCircleGrowth() {
+      growthActive = !growthActive;
+    }
+
+    function toggleCircleShrink() {
+      shrinkActive = !shrinkActive;
+    }
+
+    function toggleCircleRotation() {
+      rotationActive = !rotationActive;
+    }
+
+    function toggleColorShift() {
+      colorShiftActive = !colorShiftActive;
+    }
+
+    function toggleBackgroundMusic() {
+      backgroundMusicActive = !backgroundMusicActive;
+      if (backgroundMusicActive) {
+        audio.loop = true;
+        audio.play();
+      } else {
+        audio.pause();
+      }
+    }
+
+    function toggleGravityInversion() {
+      gravityInversionActive = !gravityInversionActive;
+      gravity = -gravity;
+    }
+
+    function toggleCircleWarp() {
+      warpActive = !warpActive;
+    }
+
+    function animate() {
+      if (!animationActive) return;
+      requestAnimationFrame(animate);
+      
+      if (!trailEffect) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      if (rotationActive) {
+        angle += 0.01;
+      }
+
+      circles.forEach(circle => {
+        circle.update();
+      });
+    }
+
+    init();
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      init();
+    });
+
+    // Mouse-based interactions
+    canvas.addEventListener('mousemove', (e) => {
+      let radius = newCircleRadius;
+      let x = e.clientX;
+      let y = e.clientY;
+      let dx = randomIntFromRange(-2, 2);
+      let dy = randomIntFromRange(-2, 2);
+      circles.push(new Circle(x, y, dx, dy, radius, circleColor));
+    });
+
+    canvas.addEventListener('mousedown', (e) => {
+      let x = e.clientX;
+      let y = e.clientY;
+      circles.forEach(circle => {
+        if (Math.hypot(circle.x - x, circle.y - y) < circle.radius) {
+          circle.color = getRandomColor();
+        }
+      });
+    });
+
+    canvas.addEventListener('mouseup', (e) => {
+      let x = e.clientX;
+      let y = e.clientY;
+      circles.forEach(circle => {
+        if (Math.hypot(circle.x - x, circle.y - y) < circle.radius) {
+          circle.radius += 10;
+        }
+      });
+    });
+
+    canvas.addEventListener('dblclick', (e) => {
+      let x = e.clientX;
+      let y = e.clientY;
+      circles = circles.filter(circle => Math.hypot(circle.x - x, circle.y - y) > circle.radius);
+    });
+
+    canvas.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      let x = e.clientX;
+      let y = e.clientY;
+      circles.forEach(circle => {
+        if (Math.hypot(circle.x - x, circle.y - y) < circle.radius) {
+          circle.radius = Math.max(circle.radius - 10, 5);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
