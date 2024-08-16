@@ -11,3 +11,4 @@ Some of the fidgety digital bullshiit I've created:
 - [fireflies](digitalFidgets/fireflies.html)
 - [tinkleboom](digitalFidgets/tinkleboom.html)
 - [doctree](digitalFidgets/doctree.html)
+- [palettest](digitalFidgets/palettest.html)
