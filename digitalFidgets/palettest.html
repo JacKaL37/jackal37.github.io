@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Tester</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .palette-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .palette-input input {
+            width: 100px;
+            height: 40px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 16px;
+        }
+        .color-label {
+            margin-top: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .pattern-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        .controls button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="palette-input">
+            <div>
+                <input type="color" id="color1" value="#98a0fe">
+                <div class="color-label" id="label1">#98a0fe</div>
+            </div>
+            <div>
+                <input type="color" id="color2" value="#ee39c6">
+                <div class="color-label" id="label2">#ee39c6</div>
+            </div>
+            <div>
+                <input type="color" id="color3" value="#8f7d7e">
+                <div class="color-label" id="label3">#8f7d7e</div>
+            </div>
+            <div>
+                <input type="color" id="color4" value="#c9abda">
+                <div class="color-label" id="label4">#c9abda</div>
+            </div>
+            <div>
+                <input type="color" id="color5" value="#000000">
+                <div class="color-label" id="label5">#000000</div>
+            </div>
+        </div>
+        <div class="pattern-container" id="patternContainer"></div>
+        <div class="controls">
+            <button id="prevPattern">Previous</button>
+            <button id="nextPattern">Next</button>
+            <button id="randomizeAll">Randomize All</button>
+        </div>
+    </div>
+
+    <script>
+        const patterns = [
+            drawSimpleWebsite,
+            drawIntricateMandala,
+            drawRandomShapes,
+            drawStripes,
+            drawCheckerboard,
+            drawSpiralPattern,
+            drawWavePattern,
+            drawGradientCircles
+        ];
+        let currentPatternIndex = 0;
+
+        function getColors() {
+            return [
+                document.getElementById('color1').value,
+                document.getElementById('color2').value,
+                document.getElementById('color3').value,
+                document.getElementById('color4').value,
+                document.getElementById('color5').value
+            ];
+        }
+
+        function updateLabels() {
+            document.getElementById('label1').textContent = document.getElementById('color1').value;
+            document.getElementById('label2').textContent = document.getElementById('color2').value;
+            document.getElementById('label3').textContent = document.getElementById('color3').value;
+            document.getElementById('label4').textContent = document.getElementById('color4').value;
+            document.getElementById('label5').textContent = document.getElementById('color5').value;
+        }
+
+        function drawSimpleWebsite(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = colors[0];
+            ctx.fillRect(0, 0, 300, 300);
+            ctx.fillStyle = colors[1];
+            ctx.fillRect(20, 20, 260, 40);
+            ctx.fillStyle = colors[2];
+            ctx.fillRect(20, 80, 260, 40);
+            ctx.fillStyle = colors[3];
+            ctx.fillRect(20, 140, 260, 40);
+            ctx.fillStyle = colors[4];
+            ctx.fillRect(20, 200, 260, 40);
+            return canvas;
+        }
+
+        function drawIntricateMandala(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            const centerX = 150;
+            const centerY = 150;
+            const numRings = 10;
+            const numSegments = 20;
+            for (let i = 0; i < numRings; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, (i + 1) * 15, 0, 2 * Math.PI);
+                ctx.strokeStyle = colors[i % colors.length];
+                ctx.stroke();
+                for (let j = 0; j < numSegments; j++) {
+                    ctx.beginPath();
+                    ctx.moveTo(centerX, centerY);
+                    ctx.lineTo(centerX + Math.cos(2 * Math.PI * j / numSegments) * (i + 1) * 15, centerY + Math.sin(2 * Math.PI * j / numSegments) * (i + 1) * 15);
+                    ctx.strokeStyle = colors[(i + j) % colors.length];
+                    ctx.stroke();
+                }
+            }
+            return canvas;
+        }
+
+        function drawRandomShapes(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            for (let i = 0; i < 50; i++) {
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.beginPath();
+                ctx.arc(Math.random() * 300, Math.random() * 300, Math.random() * 30, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            return canvas;
+        }
+
+        function drawStripes(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            for (let i = 0; i < 300; i += 30) {
+                ctx.fillStyle = colors[(i / 30) % colors.length];
+                ctx.fillRect(i, 0, 30, 300);
+            }
+            return canvas;
+        }
+
+        function drawCheckerboard(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            const size = 30;
+            for (let y = 0; y < 300; y += size) {
+                for (let x = 0; x < 300; x += size) {
+                    ctx.fillStyle = colors[(x / size + y / size) % colors.length];
+                    ctx.fillRect(x, y, size, size);
+                }
+            }
+            return canvas;
+        }
+
+        function drawSpiralPattern(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            const centerX = 150;
+            const centerY = 150;
+            const numArcs = 50;
+            for (let i = 0; i < numArcs; i++) {
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, i * 5, 0, Math.PI);
+                ctx.strokeStyle = colors[i % colors.length];
+                ctx.stroke();
+            }
+            return canvas;
+        }
+
+        function drawWavePattern(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            for (let i = 0; i < 300; i += 10) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.bezierCurveTo(75, i - 20, 225, i + 20, 300, i);
+                ctx.strokeStyle = colors[(i / 10) % colors.length];
+                ctx.stroke();
+            }
+            return canvas;
+        }
+
+        function drawGradientCircles(colors) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 300;
+            const ctx = canvas.getContext('2d');
+            for (let i = 0; i < 300; i += 30) {
+                const gradient = ctx.createRadialGradient(150, 150, i, 150, 150, i + 30);
+                gradient.addColorStop(0, colors[(i / 30) % colors.length]);
+                gradient.addColorStop(1, colors[(i / 30 + 1) % colors.length]);
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(150, 150, i + 30, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+            return canvas;
+        }
+
+        function updatePattern() {
+            const patternContainer = document.getElementById('patternContainer');
+            patternContainer.innerHTML = '';
+            const colors = getColors();
+            const canvas = patterns[currentPatternIndex](colors);
+            patternContainer.appendChild(canvas);
+            updateLabels();
+        }
+
+        function randomizeAllColors() {
+            document.getElementById('color1').value = '#' + Math.floor(Math.random()*16777215).toString(16);
+            document.getElementById('color2').value = '#' + Math.floor(Math.random()*16777215).toString(16);
+            document.getElementById('color3').value = '#' + Math.floor(Math.random()*16777215).toString(16);
+            document.getElementById('color4').value = '#' + Math.floor(Math.random()*16777215).toString(16);
+            document.getElementById('color5').value = '#' + Math.floor(Math.random()*16777215).toString(16);
+            updatePattern();
+        }
+
+        document.getElementById('prevPattern').addEventListener('click', () => {
+            currentPatternIndex = (currentPatternIndex - 1 + patterns.length) % patterns.length;
+            updatePattern();
+        });
+
+        document.getElementById('nextPattern').addEventListener('click', () => {
+            currentPatternIndex = (currentPatternIndex + 1) % patterns.length;
+            updatePattern();
+        });
+
+        document.getElementById('randomizeAll').addEventListener('click', randomizeAllColors);
+
+        document.querySelectorAll('.palette-input input').forEach(input => {
+            input.addEventListener('input', updatePattern);
+        });
+
+        updatePattern();
+    </script>
+</body>
+</html>
