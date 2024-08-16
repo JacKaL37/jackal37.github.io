@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Binaural Frequency Playground</title>
+<style>
+    body {
+        background-color: black;
+        color: white;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .container {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+    .panel {
+        background-color: #2e2e2e;
+        padding: 20px;
+        border-radius: 10px;
+        width: 300px;
+    }
+    .panel h2 {
+        color: magenta;
+    }
+    .panel label {
+        display: block;
+        margin: 10px 0 5px;
+    }
+    .panel input, .panel select {
+        width: 100%;
+        padding: 5px;
+        margin-bottom: 10px;
+    }
+    .button-container {
+        display: flex;
+        gap: 10px;
+    }
+    .button {
+        background-color: magenta;
+        color: black;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100px;
+        text-align: center;
+    }
+    .button:hover {
+        background-color: cyan;
+    }
+    canvas {
+        border: 2px solid magenta;
+        cursor: pointer;
+    }
+    .favorites {
+        background-color: #2e2e2e;
+        padding: 20px;
+        border-radius: 10px;
+        width: 200px;
+        margin-right: 20px;
+    }
+    .favorites h2 {
+        color: magenta;
+    }
+    .favorite-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+    .favorite-item span {
+        cursor: pointer;
+        color: cyan;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="favorites">
+        <h2>Favorites</h2>
+        <div id="favorite-list">
+            <div class="favorite-item">
+                <span onclick="loadFavorite(440, 440)">440 x 440</span>
+                <span onclick="removeFavorite(this)">x</span>
+            </div>
+            <div class="favorite-item">
+                <span onclick="loadFavorite(36.41, 96.43)">36.41 x 96.43</span>
+                <span onclick="removeFavorite(this)">x</span>
+            </div>
+        </div>
+    </div>
+    <div class="panel">
+        <h2>Left Ear</h2>
+        <label for="left-frequency">Frequency (Hz)</label>
+        <input type="number" id="left-frequency" min="20" max="20000" value="440">
+        <label for="left-wave-type">Wave Type</label>
+        <select id="left-wave-type">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle">Triangle</option>
+        </select>
+        <label for="left-volume">Base Volume</label>
+        <input type="range" id="left-volume" min="0" max="1" step="0.01" value="0.25">
+    </div>
+    <canvas id="dual-slider" width="300" height="300"></canvas>
+    <div class="panel">
+        <h2>Right Ear</h2>
+        <label for="right-frequency">Frequency (Hz)</label>
+        <input type="number" id="right-frequency" min="20" max="20000" value="440">
+        <label for="right-wave-type">Wave Type</label>
+        <select id="right-wave-type">
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="sawtooth">Sawtooth</option>
+            <option value="triangle">Triangle</option>
+        </select>
+        <label for="right-volume">Base Volume</label>
+        <input type="range" id="right-volume" min="0" max="1" step="0.01" value="0.25">
+    </div>
+</div>
+<div class="button-container">
+    <button class="button" onclick="startSound()">▶️</button>
+    <button class="button" onclick="stopSound()">⏹️</button>
+    <button class="button" onclick="swapFrequencies()">🔄</button>
+    <button class="button" onclick="addFavorite()">⭐</button>
+</div>
+
+<script>
+    let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    let leftOscillator, rightOscillator, leftGain, rightGain;
+    let leftPanner, rightPanner;
+
+    const canvas = document.getElementById('dual-slider');
+    const ctx = canvas.getContext('2d');
+    const maxFrequency = 512;
+    let isDragging = false;
+
+    function drawSlider(x, y) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = 'magenta';
+        ctx.fillRect(x - 5, y - 5, 10, 10);
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        updateSlider(e);
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            updateSlider(e);
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    function updateSlider(e) {
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const leftFrequency = maxFrequency - (y / canvas.height) * maxFrequency;
+        const rightFrequency = (x / canvas.width) * maxFrequency;
+
+        document.getElementById('left-frequency').value = leftFrequency.toFixed(2);
+        document.getElementById('right-frequency').value = rightFrequency.toFixed(2);
+        drawSlider(x, y);
+        updateSound();
+    }
+
+    function startSound() {
+        if (leftOscillator) leftOscillator.stop();
+        if (rightOscillator) rightOscillator.stop();
+
+        leftOscillator = audioContext.createOscillator();
+        rightOscillator = audioContext.createOscillator();
+        leftGain = audioContext.createGain();
+        rightGain = audioContext.createGain();
+        leftPanner = audioContext.createStereoPanner();
+        rightPanner = audioContext.createStereoPanner();
+
+        updateSound();
+
+        leftPanner.pan.value = -1;
+        rightPanner.pan.value = 1;
+
+        leftOscillator.connect(leftGain).connect(leftPanner).connect(audioContext.destination);
+        rightOscillator.connect(rightGain).connect(rightPanner).connect(audioContext.destination);
+
+        leftOscillator.start();
+        rightOscillator.start();
+
+        document.getElementById('left-frequency').addEventListener('input', debounce(updateSound, 100));
+        document.getElementById('left-wave-type').addEventListener('input', debounce(updateSound, 100));
+        document.getElementById('left-volume').addEventListener('input', debounce(updateSound, 100));
+        document.getElementById('right-frequency').addEventListener('input', debounce(updateSound, 100));
+        document.getElementById('right-wave-type').addEventListener('input', debounce(updateSound, 100));
+        document.getElementById('right-volume').addEventListener('input', debounce(updateSound, 100));
+    }
+
+    function stopSound() {
+        if (leftOscillator) leftOscillator.stop();
+        if (rightOscillator) rightOscillator.stop();
+    }
+
+    function updateSound() {
+        leftOscillator.frequency.setTargetAtTime(document.getElementById('left-frequency').value, audioContext.currentTime, 0.1);
+        leftOscillator.type = document.getElementById('left-wave-type').value;
+        rightOscillator.frequency.setTargetAtTime(document.getElementById('right-frequency').value, audioContext.currentTime, 0.1);
+        rightOscillator.type = document.getElementById('right-wave-type').value;
+
+        leftGain.gain.setTargetAtTime(document.getElementById('left-volume').value, audioContext.currentTime, 0.1);
+        rightGain.gain.setTargetAtTime(document.getElementById('right-volume').value, audioContext.currentTime, 0.1);
+    }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
+
+    function loadFavorite(leftFreq, rightFreq) {
+        document.getElementById('left-frequency').value = leftFreq;
+        document.getElementById('right-frequency').value = rightFreq;
+        updateSound();
+        const x = (rightFreq / maxFrequency) * canvas.width;
+        const y = canvas.height - (leftFreq / maxFrequency) * canvas.height;
+        drawSlider(x, y);
+    }
+
+    function removeFavorite(element) {
+        element.parentElement.remove();
+    }
+
+    function addFavorite() {
+        const leftFreq = document.getElementById('left-frequency').value;
+        const rightFreq = document.getElementById('right-frequency').value;
+        const favoriteList = document.getElementById('favorite-list');
+        const newFavorite = document.createElement('div');
+        newFavorite.className = 'favorite-item';
+        newFavorite.innerHTML = `<span onclick="loadFavorite(${leftFreq}, ${rightFreq})">${leftFreq} x ${rightFreq}</span> <span onclick="removeFavorite(this)">x</span>`;
+        favoriteList.appendChild(newFavorite);
+    }
+
+    function swapFrequencies() {
+        const leftFreq = document.getElementById('left-frequency').value;
+        const rightFreq = document.getElementById('right-frequency').value;
+        document.getElementById('left-frequency').value = rightFreq;
+        document.getElementById('right-frequency').value = leftFreq;
+        updateSound();
+        const x = (rightFreq / maxFrequency) * canvas.width;
+        const y = canvas.height - (leftFreq / maxFrequency) * canvas.height;
+        drawSlider(x, y);
+    }
+
+    drawSlider(canvas.width / 2, canvas.height / 2);
+</script>
+</body>
+</html>
