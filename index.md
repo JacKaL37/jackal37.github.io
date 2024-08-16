@@ -13,3 +13,4 @@ Some of the fidgety digital bullshiit I've created:
 - [doctree](digitalFidgets/doctree.html)
 - [palettest](digitalFidgets/palettest.html)
 - [binauralfreak](digitalFidgets/binauralfreak.html)
+- [heyguy](digitalFidgets/heyguy.html)
