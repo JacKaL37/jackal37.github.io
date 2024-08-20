@@ -48,15 +48,16 @@ a:hover {
 
 /* Lists */
 ul {
-  padding-left: 20px;
+  padding-left: 10px;
 }
 
 li {
-  margin-bottom: 10px;
+  margin-bottom: 0px;
 }
 
 p {
   padding-bottom: 10px;
+}
 
 /* Custom sections */
 .custom-section {
