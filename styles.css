@@ -10,7 +10,7 @@ body {
   background-color: #000000; /* black background */
   color: #FFFFFF; /* white text */
   line-height: 1.6;
-  padding: 20px;
+  padding: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,7 +18,7 @@ body {
 
 /* Container for centered content */
 .container {
-  background-color: #4B0082; /* indigo background */
+  background-color: #260041; /* deep indigo background */
   border-radius: 8px;
   padding: 20px;
   width: 80%;
@@ -28,7 +28,6 @@ body {
 
 /* Headings */
 h1, h2 {
-  margin-bottom: 20px;
   color: #FF00FF; /* magenta */
 }
 
@@ -49,13 +48,15 @@ a:hover {
 
 /* Lists */
 ul {
-  margin-bottom: 20px;
   padding-left: 20px;
 }
 
 li {
   margin-bottom: 10px;
 }
+
+p {
+  padding-bottom: 10px;
 
 /* Custom sections */
 .custom-section {
