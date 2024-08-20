@@ -23,7 +23,7 @@ open source full stack AI app developer/tinkerer
 
 *to be published in various forms*
 
-- Sufficiently Conscious -- Pulling together [the recent buzz](https://www.sciencedirect.com/science/article/pii/S0079610723001128) to talk semi-rigorously about what in the holy fuck Consciousness is even supposed to be, the philosophical angles involved, the complexity required, and how all that applies to the strange world of AI cohabitation we're moving toward. Goal is primarily to make accessible content to onboard people to this complicated, messy topic, imparting some critical thinking along the way.
+- The Hard Problem -- Pulling together [the recent buzz](https://www.sciencedirect.com/science/article/pii/S0079610723001128) to talk semi-rigorously about what in the holy fuck Consciousness is even supposed to be, the philosophical angles involved, the complexity required, and how all that applies to the strange world of AI cohabitation we're moving toward. Goal is primarily to make accessible content to onboard people to this complicated, messy topic, imparting some critical thinking along the way.
   - *video series, prolly*
   - *maybe a podcast!*
   - *at minimum worthy of a book club, tho*
