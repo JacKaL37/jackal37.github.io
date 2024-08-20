@@ -1,9 +1,11 @@
-<link rel="stylesheet" type="text/css" href="styles.css">
-
+---
+layout: default
+title: DrJKL
+---
 
 # JKL
 
-cognitive science research phd, 
+cognitive scientist phd researcher, 
 online-async educator and ex-professor, 
 open source full stack AI app developer/tinkerer
 
