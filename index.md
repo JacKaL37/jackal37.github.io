@@ -19,7 +19,7 @@ open source full stack AI app developer/tinkerer
   - *video series, prolly*
   - *maybe a podcast!*
   - *at minimum worthy of a book club, tho*
-- Cognitive Bias LLM Task Battery -- building up a repertoire of cognitive psychology tests, . ala the [Cognitive Bias Codex](media/CognitiveBiasCodex.svg) for exploring the extent to which cognitive biases exhibit in large language models (and other foundation models). After all, they're constructed from *human* data-- how many of our logical flaws have they inherited? Example: when does a given LLM exhibit Confirmation Bias? Can they be prompted out of these erros? Prompted into them? And if it DOES exhibit this behavior, does it manifest consistently under complex use cases, or is it largely irrelevant?
+- Cognitive Bias LLM Task Battery -- building up a repertoire of cognitive psychology tests typically aimed at assessing cogntive biases in human reasoning, but this time, we aim it at LLMs and explore what they did or didn't inherit from our masses of human laanguage. ala the [Cognitive Bias Codex](media/CognitiveBiasCodex.svg) for exploring the extent to which cognitive biases exhibit in large language models (and other foundation models). After all, they're constructed from *human* data-- how many of our logical flaws have they inherited? Example: when does a given LLM exhibit Confirmation Bias? Can they be prompted out of these erros? Prompted into them? And if it DOES exhibit this behavior, does it manifest consistently under complex use cases, or is it largely irrelevant?
   - *experiment platform for applying cogpsych research experiments to AI models*
   - *agentic approach will be best*
   - *also topic-by-topic generalized curriculum development*
