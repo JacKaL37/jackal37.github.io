@@ -5,7 +5,7 @@ title: DrJKL
 
 # DrJKL
 
-cognitive scientist phd researcher, 
+cognitive scientist and phd researcher, 
 
 online-async educator and ex-professor, 
 
