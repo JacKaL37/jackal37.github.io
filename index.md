@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" href="styles.css">
 
-<div class="container">
+
 # JKL
 
 cognitive science research phd, 
@@ -46,4 +46,4 @@ Some of the fidgety digital bullshiit I've created:
 - [heyguy](digitalFidgets/heyguy.html)
 - [featurecreep](digitalFidgets/featurecreep.html) - this one's all gpt-4o. i just cheered it on telling it to add more features.
 
-</div>
+
