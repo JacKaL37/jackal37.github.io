@@ -10,7 +10,7 @@ cognitive science researcher, online educator, open source full stack AI app dev
 
 ## open source LLM project tinkering
 - Mindcraft -- expanding the capabilities of the MinDcraft Minecraft bot, trying to imbue it with a bit more sense of its presence in the world, etc.  
-- CodeEvolver -- enhancing this rapid prototyping tool with more features, focusing on ES6 module imports as a lean way to develop standalone component pages 
+- CodeEvolver -- enhancing this rapid prototyping tool with more features, focusing on ES6 module imports over CDN as a lean way to develop standalone, single-file component pages (Vue3 is the current focus, React has too much representation already) that can be easily converted into node/server version with minimal fuss. 
     
 ## Digital Fidgeting
 
