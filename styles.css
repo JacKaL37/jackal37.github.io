@@ -28,16 +28,23 @@ body {
 }
 
 /* Headings */
-h1, h2 {
-  color: #FF00FF; /* magenta */
+h1{
+
   margin-top: 20px;
   margin-bottom: 10px;
   text-align: center;
 }
 
 h2 {
-  color: #00FFFF; /* cyan */
+  color: #FF00FF; /* magenta */
   margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  color: #00FFFF; /* cyan */
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* Links */
