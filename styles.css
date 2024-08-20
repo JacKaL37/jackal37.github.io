@@ -29,6 +29,8 @@ body {
 /* Headings */
 h1, h2 {
   color: #FF00FF; /* magenta */
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* Subheadings */
