@@ -11,6 +11,14 @@ online-async educator and ex-professor,
 
 open source full stack AI app developer/tinkerer
 
+[github](https://github.com/JacKaL37/)
+
+[youtube](https://www.youtube.com/@john.k.lindstedt)
+
+[linkedin](https://www.linkedin.com/in/johnklindstedt/)
+
+[google scholar](https://scholar.google.com/citations?user=40mIgZQAAAAJ)
+
 ## Long Form Research Dissemination and Outreach
 
 *to be published in various forms*
