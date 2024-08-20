@@ -19,29 +19,32 @@ body {
 /* Container for centered content */
 .container {
   background-color: #260041; /* deep indigo background */
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 40px;
-  width: 80%;
-  max-width: 680px;
+  width: 90%;
+  max-width: 800px; /* slightly larger max-width */
   margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* subtle shadow */
 }
 
 /* Headings */
 h1, h2 {
   color: #FF00FF; /* magenta */
-  margin-top: 10px;
+  margin-top: 20px;
   margin-bottom: 10px;
+  text-align: center;
 }
 
-/* Subheadings */
 h2 {
   color: #00FFFF; /* cyan */
+  margin-top: 15px;
 }
 
 /* Links */
 a {
   color: #FF006E; /* cerise */
   text-decoration: none;
+  font-weight: bold;
 }
 
 a:hover {
@@ -50,13 +53,22 @@ a:hover {
 
 /* Lists */
 ul {
-  margin-left: 10px;
+  margin-left: 20px;
+  padding-left: 20px;
+  list-style: none; /* remove default bullets */
+}
+
+ul li::before {
+  content: '•'; /* custom bullet */
+  color: #FF00FF; /* magenta bullet */
+  padding-right: 10px;
 }
 
 li {
-  margin-left: 10px;
+  margin-bottom: 10px;
 }
 
+/* Paragraphs */
 p {
   padding-bottom: 10px;
 }
@@ -64,9 +76,10 @@ p {
 /* Custom sections */
 .custom-section {
   background-color: #4B0082; /* indigo */
-  padding: 20px;
-  border-radius: 8px;
+  padding: 30px;
+  border-radius: 12px;
   margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* subtle shadow */
 }
 
 /* Whitespace */
