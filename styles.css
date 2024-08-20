@@ -50,11 +50,11 @@ a:hover {
 
 /* Lists */
 ul {
-  padding-left: 10px;
+  margin-left: 10px;
 }
 
 li {
-  padding-left: 10px;
+  margin-left: 10px;
 }
 
 p {
