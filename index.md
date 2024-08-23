@@ -65,5 +65,7 @@ Some of the fidgety digital bullshiit I've created:
 - [binauralfreak](digitalFidgets/binauralfreak.html)
 - [heyguy](digitalFidgets/heyguy.html)
 - [featurecreep](digitalFidgets/featurecreep.html) - this one's all gpt-4o. i just cheered it on telling it to add more features.
-
-
+- [simplepom](digitalFidgets/simplepom.html)
+- [marpviewer](digitalFidgets/marpviewer.html)
+- [html2markdown](digitalFidgets/html2markdown.html)
+- [markdownexploder](digitalFidgets/markdownexploder.html) 
