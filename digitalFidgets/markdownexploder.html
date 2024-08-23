@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Markdown to Zip</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body class="bg-black text-white">
+
+  <div id="app" class="p-4">
+    <input type="file" @change="handleFileUpload" class="mb-4" />
+    <textarea v-model="markdownContent" rows="10" class="w-full mb-4 p-2 bg-indigo text-white"></textarea>
+    <button @click="generateZip" class="bg-magenta text-white p-2 rounded mb-4">Generate Zip</button>
+    <div v-for="(section, index) in sections" :key="index" class="mb-4 p-2 bg-cerise text-white rounded relative">
+      <h3>Section {{ index + 1 }}</h3>
+      <div v-for="header in section.headers" :key="header" class="text-secondary">{{ header }}</div>
+      <pre class="text-white overflow-hidden whitespace-pre-wrap">{{ section.content }}</pre>
+      <button @click="copyContent(section.content)" class="absolute top-0 right-0 bg-magenta text-white p-1 rounded">Copy</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createApp, ref, watch } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js';
+
+    createApp({
+      setup() {
+        const markdownContent = ref('');
+        const sections = ref([]);
+
+        const handleFileUpload = (event) => {
+          const file = event.target.files[0];
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            markdownContent.value = e.target.result;
+          };
+          reader.readAsText(file);
+        };
+
+        const parseMarkdown = (content, parentHeaders = []) => {
+          const lines = content.split('\n');
+          let currentSection = '';
+          let sections = [];
+          let headers = [...parentHeaders];
+          
+          lines.forEach(line => {
+            if (line.startsWith('#')) {
+              if (currentSection) {
+                sections.push({ headers: [...headers], content: currentSection });
+                currentSection = '';
+              }
+              headers = headers.slice(0, line.match(/#/g).length - 1);
+              headers.push(line);
+            } else {
+              currentSection += line + '\n';
+            }
+          });
+
+          if (currentSection) {
+            sections.push({ headers: [...headers], content: currentSection });
+          }
+
+          return sections;
+        };
+
+        const generateZip = () => {
+          const zip = new JSZip();
+          const parsedSections = parseMarkdown(markdownContent.value);
+
+          const addSectionToZip = (section, path) => {
+            const content = section.headers.join('\n') + '\n' + section.content;
+            zip.file(path + 'README.md', content);
+
+            const subSections = parseMarkdown(section.content, section.headers);
+            if (subSections.length > 0 && subSections[0].headers.length > section.headers.length) {
+              subSections.forEach((subSection, index) => {
+                addSectionToZip(subSection, path + `section-${index + 1}/`);
+              });
+            }
+          };
+
+          parsedSections.forEach((section, index) => {
+            addSectionToZip(section, `section-${index + 1}/`);
+          });
+
+          zip.generateAsync({ type: 'blob' }).then((blob) => {
+            saveAs(blob, 'markdown.zip');
+          });
+        };
+
+        const copyContent = (content) => {
+          navigator.clipboard.writeText(content).then(() => {
+            console.log('Content copied to clipboard');
+          });
+        };
+
+        watch(markdownContent, (newContent) => {
+          sections.value = parseMarkdown(newContent);
+        });
+
+        return {
+          markdownContent,
+          sections,
+          handleFileUpload,
+          generateZip,
+          copyContent
+        };
+      }
+    }).mount('#app');
+  </script>
+
+  <style>
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+    }
+    .bg-black {
+      background-color: #000000;
+    }
+    .text-white {
+      color: #FFFFFF;
+    }
+    .bg-indigo {
+      background-color: #4B0082;
+    }
+    .bg-magenta {
+      background-color: #FF00FF;
+    }
+    .bg-cerise {
+      background-color: #FF006E;
+    }
+    .text-secondary {
+      color: #00FFFF;
+    }
+    .text-tertiary {
+      color: #FF006E;
+    }
+    .p-4 {
+      padding: 1rem;
+    }
+    .mb-4 {
+      margin-bottom: 1rem;
+    }
+    .w-full {
+      width: 100%;
+    }
+    .p-2 {
+      padding: 0.5rem;
+    }
+    .rounded {
+      border-radius: 0.25rem;
+    }
+    .overflow-hidden {
+      overflow: hidden;
+    }
+    .whitespace-pre-wrap {
+      white-space: pre-wrap;
+    }
+    .relative {
+      position: relative;
+    }
+    .absolute {
+      position: absolute;
+    }
+    .top-0 {
+      top: 0;
+    }
+    .right-0 {
+      right: 0;
+    }
+  </style>
+
+</body>
+</html>

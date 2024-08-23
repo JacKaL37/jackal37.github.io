@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Pomodoro Timer Tool</title>
+  <style>
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: Arial, sans-serif;
+    }
+    #app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .timer {
+      font-size: 25vw;
+      margin-bottom: 40px;
+      width: 80%;
+      height: 80%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .buttons button {
+      font-size: 18px;
+      padding: 10px 20px;
+      background-color: #FF00FF;
+      border: none;
+      color: #FFFFFF;
+      cursor: pointer;
+    }
+    .buttons button:hover {
+      background-color: #FF006E;
+    }
+    .panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background-color: #4B0082;
+      color: #FFFFFF;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+    }
+    .panel.open {
+      transform: translateX(0);
+    }
+    .panel button {
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 10px;
+      background-color: #FF00FF;
+      border: none;
+      color: #FFFFFF;
+      cursor: pointer;
+    }
+    .panel button:hover {
+      background-color: #FF006E;
+    }
+    .panel input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    .panel .close-btn {
+      background-color: #00FFFF;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <div class="timer">{{ minutes }}:{{ seconds }}</div>
+    <div class="buttons">
+      <button @click="startTimer">Start</button>
+      <button @click="stopTimer">Stop</button>
+      <button @click="resetTimer">Reset</button>
+      <button @click="togglePanel">Presets</button>
+      <button @click="playChime">Test Chime</button>
+    </div>
+    <div :class="['panel', { open: isPanelOpen }]">
+      <button class="close-btn" @click="togglePanel">Close</button>
+      <div v-for="preset in presets" :key="preset.name">
+        <button @click="setTimer(preset.duration)">{{ preset.name }}</button>
+      </div>
+      <input v-model="newPresetName" placeholder="New Preset Name" />
+      <input v-model="newPresetDuration" type="number" placeholder="Duration (minutes)" />
+      <button @click="addPreset">Add Preset</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+    createApp({
+      setup() {
+        const minutes = ref(25);
+        const seconds = ref('00');
+        const isPanelOpen = ref(false);
+        const timer = ref(null);
+        const presets = ref([
+          { name: 'Pomodoro', duration: 25 },
+          { name: 'Short Break', duration: 5 },
+          { name: 'Long Break', duration: 15 },
+          { name: 'Do Dishes', duration: 10 },
+          { name: 'Load Laundry', duration: 15 },
+        ]);
+        const newPresetName = ref('');
+        const newPresetDuration = ref('');
+
+        const startTimer = () => {
+          if (timer.value) return;
+          timer.value = setInterval(() => {
+            let totalSeconds = minutes.value * 60 + parseInt(seconds.value);
+            if (totalSeconds <= 0) {
+              clearInterval(timer.value);
+              timer.value = null;
+              playChime();
+              return;
+            }
+            totalSeconds--;
+            minutes.value = Math.floor(totalSeconds / 60);
+            seconds.value = String(totalSeconds % 60).padStart(2, '0');
+          }, 1000);
+        };
+
+        const stopTimer = () => {
+          clearInterval(timer.value);
+          timer.value = null;
+        };
+
+        const resetTimer = () => {
+          stopTimer();
+          minutes.value = 25;
+          seconds.value = '00';
+        };
+
+        const togglePanel = () => {
+          isPanelOpen.value = !isPanelOpen.value;
+        };
+
+        const setTimer = (duration) => {
+          minutes.value = duration;
+          seconds.value = '00';
+          togglePanel();
+        };
+
+        const addPreset = () => {
+          if (newPresetName.value && newPresetDuration.value) {
+            presets.value.push({
+              name: newPresetName.value,
+              duration: parseInt(newPresetDuration.value),
+            });
+            newPresetName.value = '';
+            newPresetDuration.value = '';
+          }
+        };
+
+        const playChime = () => {
+          const context = new (window.AudioContext || window.webkitAudioContext)();
+          const frequencies = [523.25, 587.33, 659.25, 783.99, 880]; // C, D, E, G, A (Pentatonic Scale)
+          frequencies.forEach((freq, index) => {
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            oscillator.frequency.setValueAtTime(freq, context.currentTime + index * 0.04);
+            gainNode.gain.setValueAtTime(0.1, context.currentTime + index * 0.04);
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            oscillator.start(context.currentTime + index * 0.04);
+            oscillator.stop(context.currentTime + index * 0.04 + 0.04);
+          });
+        };
+
+        return {
+          minutes,
+          seconds,
+          isPanelOpen,
+          presets,
+          newPresetName,
+          newPresetDuration,
+          startTimer,
+          stopTimer,
+          resetTimer,
+          togglePanel,
+          setTimer,
+          addPreset,
+          playChime,
+        };
+      }
+    }).mount('#app');
+  </script>
+
+</body>
+</html>

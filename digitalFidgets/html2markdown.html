@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>HTML to Markdown Converter</title>
+</head>
+
+<body class="bg-black text-white">
+
+  <div id="app" class="flex flex-col h-screen">
+    <div class="flex-none p-4 flex justify-between items-center bg-indigo-500">
+      <input type="file" @change="loadFile" class="text-magenta" />
+      <button @click="copyOutput" class="bg-magenta text-black p-2 rounded">Copy Output</button>
+    </div>
+    <div class="flex-1 flex overflow-hidden">
+      <div class="flex-1 p-4 bg-indigo-700 overflow-y-auto">
+        <h2 class="text-magenta">Input Display</h2>
+        <div class="viewer" v-html="inputDisplay"></div>
+      </div>
+      <div class="flex-1 p-4 bg-indigo-900 overflow-y-auto">
+        <h2 class="text-magenta">Output Display</h2>
+        <div class="viewer" v-html="markdownOutput"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
+
+    createApp({
+      setup() {
+        const markdownOutput = ref('');
+        const inputDisplay = ref('');
+
+        const loadFile = (event) => {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              const htmlText = e.target.result;
+              inputDisplay.value = `<pre>${htmlText.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>`;
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(htmlText, 'text/html');
+              const markdown = convertToMarkdown(doc.documentElement);
+              markdownOutput.value = `<pre>${markdown}</pre>`;
+            };
+            reader.readAsText(file);
+          }
+        };
+
+        const convertToMarkdown = (element) => {
+          let markdown = '';
+          if (element.nodeType === Node.ELEMENT_NODE) {
+            switch (element.tagName.toLowerCase()) {
+              case 'h1':
+                markdown += `# ${element.textContent.trim()}\n\n`;
+                break;
+              case 'h2':
+                markdown += `## ${element.textContent.trim()}\n\n`;
+                break;
+              case 'h3':
+                markdown += `### ${element.textContent.trim()}\n\n`;
+                break;
+              case 'h4':
+                markdown += `#### ${element.textContent.trim()}\n\n`;
+                break;
+              case 'h5':
+                markdown += `##### ${element.textContent.trim()}\n\n`;
+                break;
+              case 'h6':
+                markdown += `###### ${element.textContent.trim()}\n\n`;
+                break;
+              case 'p':
+                markdown += `${element.textContent.trim()}\n\n`;
+                break;
+              case 'em':
+                markdown += `*${element.textContent.trim()}* `;
+                break;
+              case 'strong':
+                markdown += `**${element.textContent.trim()}** `;
+                break;
+              case 'a':
+                markdown += `[${element.textContent.trim()}](${element.getAttribute('href')}) `;
+                break;
+              case 'sup':
+                markdown += `^${element.textContent.trim()}^ `;
+                break;
+              case 'ul':
+                markdown += `\n`;
+                Array.from(element.childNodes).forEach(child => {
+                  markdown += convertToMarkdown(child);
+                });
+                markdown += `\n`;
+                break;
+              case 'ol':
+                markdown += `\n`;
+                let index = 1;
+                Array.from(element.childNodes).forEach(child => {
+                  if (child.tagName && child.tagName.toLowerCase() === 'li') {
+                    markdown += `${index}. ${convertToMarkdown(child).trim()}\n`;
+                    index++;
+                  } else {
+                    markdown += convertToMarkdown(child);
+                  }
+                });
+                markdown += `\n`;
+                break;
+              case 'li':
+                markdown += `- ${element.textContent.trim()}\n`;
+                break;
+              case 'div':
+                markdown += `\n`;
+                Array.from(element.childNodes).forEach(child => {
+                  markdown += convertToMarkdown(child);
+                });
+                markdown += `\n`;
+                break;
+              default:
+                Array.from(element.childNodes).forEach(child => {
+                  markdown += convertToMarkdown(child);
+                });
+                break;
+            }
+          } else if (element.nodeType === Node.TEXT_NODE) {
+            markdown += element.textContent.trim() + ' ';
+          }
+          return markdown;
+        };
+
+        const copyOutput = () => {
+          const el = document.createElement('textarea');
+          el.value = markdownOutput.value.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+          document.body.appendChild(el);
+          el.select();
+          document.execCommand('copy');
+          document.body.removeChild(el);
+        };
+
+        return { loadFile, markdownOutput, inputDisplay, copyOutput };
+      }
+    }).mount('#app');
+  </script>
+
+  <style>
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .viewer {
+      background-color: #4B0082;
+      padding: 10px;
+      white-space: pre-wrap;
+      overflow-y: auto;
+      border: 1px solid #FF00FF;
+      color: #00FFFF;
+      font-family: monospace;
+    }
+
+    input[type="file"] {
+      color: #FF00FF;
+    }
+
+    .bg-black {
+      background-color: #000000;
+    }
+
+    .text-white {
+      color: #FFFFFF;
+    }
+
+    .bg-indigo-500 {
+      background-color: #4B0082;
+    }
+
+    .bg-indigo-700 {
+      background-color: #3A0066;
+    }
+
+    .bg-indigo-900 {
+      background-color: #2A0049;
+    }
+
+    .text-magenta {
+      color: #FF00FF;
+    }
+
+    .text-black {
+      color: #000000;
+    }
+
+    .bg-magenta {
+      background-color: #FF00FF;
+    }
+
+    .p-2 {
+      padding: 0.5rem;
+    }
+
+    .p-4 {
+      padding: 1rem;
+    }
+
+    .flex {
+      display: flex;
+    }
+
+    .flex-col {
+      flex-direction: column;
+    }
+
+    .flex-1 {
+      flex: 1;
+    }
+
+    .flex-none {
+      flex: none;
+    }
+
+    .justify-between {
+      justify-content: space-between;
+    }
+
+    .items-center {
+      align-items: center;
+    }
+
+    .rounded {
+      border-radius: 0.25rem;
+    }
+
+    .overflow-hidden {
+      overflow: hidden;
+    }
+
+    .overflow-y-auto {
+      overflow-y: auto;
+    }
+
+    .h-screen {
+      height: 100vh;
+    }
+  </style>
+
+</body>
+
+</html>
