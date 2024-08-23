@@ -32,7 +32,7 @@ Building up a repertoire of cognitive psychology tests typically aimed at assess
 
 ## Agentic Tool Engineering
 
-*likely Autogen*
+*likely [Autogen](https://github.com/microsoft/autogen/tree/main/notebook), maybe [Langgraph](https://github.com/langchain-ai/langgraph/tree/main/examples)*
 
 ### Video Curriculum Digestion Swarm 
 I have 100+ hours of video content from my time teaching during the pandemic. I made all my own materials (i.e., didn't use textbooks), so... let's throw that in reverse. Working on digesting, atomizing, and recombobulating all the Stuff What I Done Talked About those five years into a more useful structures: documents, textbook chapters, wiki knowledgebases, etc.
