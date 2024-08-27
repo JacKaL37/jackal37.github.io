@@ -69,4 +69,5 @@ Some of the fidgety digital bullshiit I've created:
 - [simplepom](digitalFidgets/simplepom.html)
 - [marpviewer](digitalFidgets/marpviewer.html)
 - [html2markdown](digitalFidgets/html2markdown.html)
-- [markdownexploder](digitalFidgets/markdownexploder.html) 
+- [markdownexploder](digitalFidgets/markdownexploder.html)
+- [WelcomeToTheCreativePage](digitalFidgets/WelcomeToTheCreativePage) - ai is truly the wow
