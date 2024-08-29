@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Shitty Scrivener</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: row;
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      margin: 0;
+    }
+    #app {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+    #editor, #cards {
+      width: 50%;
+      height: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    #editor {
+      background-color: #1E1E1E;
+      color: #FFFFFF;
+      font-family: monospace;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    #cards {
+      background-color: #2E2E2E;
+      color: #FFFFFF;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    #documentEditor {
+      width: 100%;
+      height: 100%;
+      background-color: #1E1E1E;
+      color: #FFFFFF;
+      border: none;
+      resize: none;
+      flex-grow: 1;
+    }
+    .card {
+      display: flex;
+      flex-direction: column;
+      background-color: #4B0082;
+      margin-bottom: 10px;
+      padding: 15px;
+      border-radius: 20px;
+      cursor: move;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      position: relative;
+      border: 2px solid transparent;
+    }
+    .card:hover {
+      border-color: #FF00FF;
+    }
+    .card:hover .level-buttons,
+    .level-buttons:hover {
+      display: flex;
+    }
+    .divider {
+      display: flex;
+      align-items: center;
+      height: 40px;
+      color: #222222;
+      transition: background-color 0.2s ease;
+      border: 2px solid transparent;
+    }
+    .divider hr {
+      width: 100%;
+    }
+    .divider.drag-over {
+      background-color: #FF00FF44;
+      border-color: #FF00FF;
+    }
+    .card.dragging {
+      opacity: 0.5;
+      transform: scale(1.05);
+    }
+    .card.drag-over {
+      border: 2px dashed #FF00FF;
+    }
+    .card.fade-up {
+      animation: fadeUp 0.5s forwards;
+    }
+    .card.fade-down {
+      animation: fadeDown 0.5s forwards;
+    }
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .markdown-it-code {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+    }
+    .level-buttons {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 10px;
+      left: -10px;
+    }
+    .level-buttons button {
+      background-color: #FF00FF;
+      color: #FFFFFF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 5px;
+      margin: 5px 0px;
+      transition: background-color 0.2s ease;
+    }
+    .level-buttons button:hover {
+      background-color: #FF006E;
+    }
+    h1 {
+      color: #FFFFFF;
+    }
+    h2 {
+      color: #FF00FF;
+    }
+    h3 {
+      color: #00FFFF;
+    }
+    h4 {
+      color: #FF006E;
+    }
+    h5 {
+      color: #FFFF00;
+    }
+    h6 {
+      color: #FF8800;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div id="editor">
+      <textarea id="documentEditor" v-model="markdown"></textarea>
+    </div>
+    <div id="cards">
+      <div v-for="(section, index) in sections" :key="index">
+        <div class="card" :style="{ marginLeft: `${section.level * 20}px` }" draggable="true" @dragstart="dragStart(index, $event)" @dragover.prevent="dragOverCard(index, $event)" @dragleave="dragLeaveCard(index)" @drop="dropCard(index)" @dragend="dragEnd">
+          <div v-html="section.htmlContent"></div>
+          <div class="level-buttons">
+            <button @click="increaseLevel(index)">&gt;</button>
+            <button @click="decreaseLevel(index)">&lt;</button>
+          </div>
+        </div>
+        <div class="divider" @dragover.prevent="dragOverDivider(index, $event)" @dragleave="dragLeaveDivider(index)" @drop="dropDivider(index)"><hr/></div>
+      </div>
+      <div class="divider" @dragover.prevent="dragOverDivider(sections.length, $event)" @dragleave="dragLeaveDivider(sections.length)" @drop="dropDivider(sections.length)"></div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/markdown-it/dist/markdown-it.min.js"></script>
+  <script type="module">
+    import { createApp, ref, watch } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js';
+
+    createApp({
+      setup() {
+        const defaultMarkdown = `# Welcome to Shitty Scrivener\n\nShitty Scrivener is a tool to help you organize your thoughts and ideas using Markdown.\n\n## How to Use\n\n1. **Write Markdown**: Use the left pane to write your Markdown content.\n2. **View Cards**: The right pane will display your content as draggable cards.\n3. **Drag and Drop**: Rearrange the cards by dragging and dropping them-- onto another card to swap places, between cards to insert.\n4. **Adjust Levels**: Use the buttons on each card to increase or decrease the heading levels.\n\n## Features\n\n- **Live Preview**: See your Markdown content rendered in real-time.\n- **Drag and Drop**: Easily reorganize your content by dragging and dropping cards.\n- **Level Adjustments**: Change the heading levels directly on the cards.`;
+        const markdown = ref(defaultMarkdown);
+        const sections = ref([]);
+        let draggedIndex = null;
+        const md = new markdownit();
+        
+        // Customize code block rendering
+        md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+          const token = tokens[idx];
+          const content = token.content;
+          return `<pre class="markdown-it-code"><code>${md.utils.escapeHtml(content)}</code></pre>`;
+        };
+
+        const parseMarkdown = (markdownText) => {
+          const lines = markdownText.split('\n');
+          let currentLevel = 0;
+          let currentContent = [];
+          const result = [];
+
+          lines.forEach(line => {
+            const match = line.match(/^(#{1,6})\s+(.*)$/);
+            if (match) {
+              if (currentContent.length > 0) {
+                result.push({
+                  level: currentLevel,
+                  content: currentContent.join('\n'),
+                  htmlContent: md.render(currentContent.join('\n'))
+                });
+                currentContent = [];
+              }
+              currentLevel = match[1].length;
+              currentContent.push(line);
+            } else {
+              currentContent.push(line);
+            }
+          });
+
+          if (currentContent.length > 0) {
+            result.push({
+              level: currentLevel,
+              content: currentContent.join('\n'),
+              htmlContent: md.render(currentContent.join('\n'))
+            });
+          }
+
+          return result;
+        };
+
+        // Load from localStorage
+        try {
+          const savedMarkdown = localStorage.getItem('shittyScrivenerMarkdown');
+          if (savedMarkdown) {
+            markdown.value = savedMarkdown;
+          }
+        } catch (error) {
+          console.error("Could not access localStorage, using default markdown.", error);
+        }
+
+        watch(markdown, (newMarkdown) => {
+          sections.value = parseMarkdown(newMarkdown);
+          try {
+            localStorage.setItem('shittyScrivenerMarkdown', newMarkdown);
+          } catch (error) {
+            console.error("Could not save to localStorage.", error);
+          }
+        }, { immediate: true });
+
+        const dragStart = (index, event) => {
+          draggedIndex = index;
+          event.target.classList.add('dragging');
+        };
+
+        const dragOverCard = (index, event) => {
+          event.preventDefault();
+          const card = event.target.closest('.card');
+          card.classList.add('drag-over');
+        };
+
+        const dragLeaveCard = (index) => {
+          const card = document.querySelectorAll('.card')[index];
+          card.classList.remove('drag-over');
+        };
+
+        const dropCard = (index) => {
+          const draggedItem = sections.value.splice(draggedIndex, 1)[0];
+          const direction = index > draggedIndex ? 'fade-down' : 'fade-up';
+          sections.value.splice(index, 0, draggedItem);
+          markdown.value = sections.value.map(section => section.content).join('\n');
+          setTimeout(() => {
+            document.querySelectorAll('.card')[index].classList.add(direction);
+            setTimeout(() => {
+              document.querySelectorAll('.card')[index].classList.remove(direction);
+            }, 500);
+          }, 0);
+          document.querySelectorAll('.card')[index].classList.remove('drag-over');
+        };
+
+        const dragOverDivider = (index, event) => {
+          event.preventDefault();
+          const divider = event.target;
+          divider.classList.add('drag-over');
+        };
+
+        const dragLeaveDivider = (index) => {
+          const divider = document.querySelectorAll('.divider')[index];
+          divider.classList.remove('drag-over');
+        };
+
+        const dropDivider = (index) => {
+          const draggedItem = sections.value.splice(draggedIndex, 1)[0];
+          sections.value.splice(index + 1, 0, draggedItem);
+          markdown.value = sections.value.map(section => section.content).join('\n');
+          const direction = index + 1 > draggedIndex ? 'fade-down' : 'fade-up';
+          setTimeout(() => {
+            document.querySelectorAll('.card')[index + 1].classList.add(direction);
+            setTimeout(() => {
+              document.querySelectorAll('.card')[index + 1].classList.remove(direction);
+            }, 500);
+          }, 0);
+          document.querySelectorAll('.divider')[index].classList.remove('drag-over');
+        };
+
+        const dragEnd = (event) => {
+          event.target.classList.remove('dragging');
+          document.querySelectorAll('.card').forEach(card => card.classList.remove('drag-over'));
+          document.querySelectorAll('.divider').forEach(divider => divider.classList.remove('drag-over'));
+        };
+
+        const increaseLevel = (index) => {
+          if (sections.value[index].level < 6) {
+            sections.value[index].level++;
+            sections.value[index].content = sections.value[index].content.replace(/^(#{1,6})/, '#$1');
+            markdown.value = sections.value.map(section => section.content).join('\n');
+          }
+        };
+
+        const decreaseLevel = (index) => {
+          if (sections.value[index].level > 1) {
+            sections.value[index].level--;
+            sections.value[index].content = sections.value[index].content.replace(/^(#{2,6})/, (match) => match.slice(1));
+            markdown.value = sections.value.map(section => section.content).join('\n');
+          }
+        };
+
+        return { markdown, sections, dragStart, dragOverCard, dragLeaveCard, dropCard, dragOverDivider, dragLeaveDivider, dropDivider, dragEnd, increaseLevel, decreaseLevel };
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
