@@ -15,6 +15,28 @@ open source full stack AI app developer/tinkerer <br/>
 - [linkedin](https://www.linkedin.com/in/johnklindstedt/)
 - [google scholar](https://scholar.google.com/citations?user=40mIgZQAAAAJ)
 
+## Digital Fidget tinkering
+
+*brain warm-up splat-posting*
+
+Part of my daily workflow lately is using my own forked version of https://evolvecode.io/ to futz around and get my programmatic and project development juices flowing. 
+
+Some of the fidgety digital bullshiit I've created:
+- [inkstroke](digitalFidgets/inkstroke.html) - quick inky clicky wonks
+- [fireflies](digitalFidgets/fireflies.html)
+- [tinkleboom](digitalFidgets/tinkleboom.html)
+- [doctree](digitalFidgets/doctree.html)
+- [palettester](digitalFidgets/palettester.html)
+- [binauralfreak](digitalFidgets/binauralfreak.html)
+- [heyguy](digitalFidgets/heyguy.html)
+- [featurecreep](digitalFidgets/featurecreep.html) - this one's all gpt-4o. i just cheered it on telling it to add more features.
+- [simplepom](digitalFidgets/simplepom.html)
+- [marpviewer](digitalFidgets/marpviewer.html)
+- [html2markdown](digitalFidgets/html2markdown.html)
+- [markdownexploder](digitalFidgets/markdownexploder.html)
+- [WelcomeToTheCreativePage](digitalFidgets/WelcomeToTheCreativePage.html) - ai is truly the wow
+- [ShittyScrivener](digitalFidgets/ShittyScrivener.html) - scrivener but shittier
+
 ## Long Form Research Dissemination and Outreach
 
 *to be published in various forms*
@@ -51,23 +73,4 @@ Expanding the capabilities of the MinDcraft Minecraft bot, trying to imbue it wi
 ### [CodeEvolver](https://github.com/MaxRobinsonTheGreat/CodeEvolver) 
 Rapid prototyping tool, adding features, focusing on ES6 module imports over CDN as a lean way to develop standalone, single-file component pages (Vue3 is the current focus, React has too much representation already) that can be easily converted into node/server version with minimal fuss. 
     
-## Digital Fidget tinkering
 
-*brain warm-up splat-posting*
-
-Part of my daily workflow lately is using https://evolvecode.io/ to futz around and get my programmatic and project development juices flowing. 
-
-Some of the fidgety digital bullshiit I've created:
-- [inkstroke](digitalFidgets/inkstroke.html) - quick inky clicky wonks
-- [fireflies](digitalFidgets/fireflies.html)
-- [tinkleboom](digitalFidgets/tinkleboom.html)
-- [doctree](digitalFidgets/doctree.html)
-- [palettester](digitalFidgets/palettester.html)
-- [binauralfreak](digitalFidgets/binauralfreak.html)
-- [heyguy](digitalFidgets/heyguy.html)
-- [featurecreep](digitalFidgets/featurecreep.html) - this one's all gpt-4o. i just cheered it on telling it to add more features.
-- [simplepom](digitalFidgets/simplepom.html)
-- [marpviewer](digitalFidgets/marpviewer.html)
-- [html2markdown](digitalFidgets/html2markdown.html)
-- [markdownexploder](digitalFidgets/markdownexploder.html)
-- [WelcomeToTheCreativePage](digitalFidgets/WelcomeToTheCreativePage) - ai is truly the wow
