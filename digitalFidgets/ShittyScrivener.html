@@ -186,25 +186,37 @@
 
     createApp({
       setup() {
-        const defaultMarkdown = `# Welcome to Shitty Scrivener\n\n
-        Shitty Scrivener is a tool to help you organize your thoughts and ideas using Markdown.\n\n
-        ## How to Use\n\n
-        1. **Write Markdown**: Use the left pane to write your Markdown content.\n
-        2. **View Cards**: The right pane will display your content as draggable cards.\n
-        3. **Drag and Drop**: Rearrange the cards by dragging and dropping between two cards (inserts between) or onto another card (shifts everything).\n
-        4. **Adjust Levels**: Use the buttons on each card to increase or decrease the heading levels.\n\n
-        ## Features\n\n
-        - **Live Preview**: The markdown for each section is rendered live.\n
-        - **Drag and Drop**: Easily reorganize your content by dragging and dropping cards.\n
-        - **Level Adjustments**: Change the heading levels directly on the cards.
-        ## Demo
-        ### Drag me somewhere!
-        My content stays with me, and I keep my indentation level regardless. The Markdown is updated in real time. 
-        ### Adjust my indentation level 
-        Use the > and < buttons that appear when you hover over this card to adjust the header level of the underlying markdown. 
-        ### Write a new markdown header using the editor to the left
-        As you type, new cards appear here. 
-        `;
+        const defaultMarkdown = `# Welcome to Shitty Scrivener
+
+Shitty Scrivener is a tool to help you organize your thoughts and ideas using Markdown.
+
+## How to Use
+
+1. **Write Markdown**: Use the left pane to write your Markdown content.\n
+2. **View Cards**: The right pane will display your content as draggable cards.\n
+3. **Drag and Drop**: Rearrange the cards by dragging and dropping between two cards (inserts between) or onto another card (shifts everything).\n
+4. **Adjust Levels**: Use the buttons on each card to increase or decrease the heading levels.
+
+## Features
+
+- **Live Preview**: The markdown for each section is rendered live.\n
+- **Drag and Drop**: Easily reorganize your content by dragging and dropping cards.\n
+- **Level Adjustments**: Change the heading levels directly on the cards.
+
+## Demo
+
+### Drag me somewhere!
+
+My content stays with me, and I keep my indentation level regardless. The Markdown is updated in real time. 
+
+### Adjust my indentation level 
+
+Use the > and < buttons that appear when you hover over this card to adjust the header level of the underlying markdown. 
+
+### Write a new markdown header using the editor to the left
+
+As you type, new cards appear here. 
+`;
         const markdown = ref(defaultMarkdown);
         const sections = ref([]);
         let draggedIndex = null;
