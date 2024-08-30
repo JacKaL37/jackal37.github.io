@@ -11,7 +11,7 @@ open source full stack AI app developer/tinkerer <br/>
 
 - [github](https://github.com/JacKaL37/)
   - [this repo](https://github.com/JacKaL37/JacKaL37.github.io)
-- [youtube](https://www.youtube.com/@john.k.lindstedt)
+- [youtube](https://www.youtube.com/@j-k-lab)
 - [linkedin](https://www.linkedin.com/in/johnklindstedt/)
 - [google scholar](https://scholar.google.com/citations?user=40mIgZQAAAAJ)
 
