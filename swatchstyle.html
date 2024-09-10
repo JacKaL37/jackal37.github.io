@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vue3 Style Explorer</title>
+  <style>
+    body {
+      background-color: #000000;
+      color: #FFFFFF;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .cell {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      position: relative;
+      width: 250px;
+      height: 50px;
+    }
+    .cell button {
+      padding: 5px 5px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 20px;
+      height: 20px;
+      font-size: 10px;
+      background: #FF006E;
+      border: none;
+      border-radius: 50%;
+      color: #FFFFFF;
+      display: none;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 20px;
+    }
+    .cell:hover .remove-btn {
+      display: flex;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .code-input {
+      width: 100%;
+      height: 100%;
+      background: #1a1a1a;
+      color: #FFFFFF;
+      border: none;
+      padding: 5px;
+      font-family: monospace;
+      resize: none;
+    }
+    .add-btn {
+      padding: 10px 20px;
+      background: #FF00FF;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      color: #FFFFFF;
+    }
+    .highlight {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <div class="grid">
+      <div class="row">
+        <div class="cell" @mouseover="highlightColumn(-1)" @mouseleave="removeHighlight">
+          <textarea v-model="baseCSS" class="code-input" placeholder="Base CSS"></textarea>
+        </div>
+        <div v-for="(col, colIndex) in columns" :key="'col-' + colIndex" class="cell" @mouseover="highlightColumn(colIndex)" @mouseleave="removeHighlight">
+          <textarea v-model="columns[colIndex]" class="code-input" placeholder="Column CSS"></textarea>
+          <button class="remove-btn" @click="removeColumn(colIndex)">x</button>
+        </div>
+        <button @click="addColumn" class="add-btn add-column-btn">+ Add Column</button>
+      </div>
+      <div v-for="(row, rowIndex) in rows" :key="'row-' + rowIndex" class="row">
+        <div class="cell" @mouseover="highlightRow(rowIndex)" @mouseleave="removeHighlight">
+          <textarea v-model="rows[rowIndex]" class="code-input" placeholder="Row CSS"></textarea>
+          <button class="remove-btn" @click="removeRow(rowIndex)">x</button>
+        </div>
+        <div v-for="(col, colIndex) in columns" :key="'combo-' + rowIndex + '-' + colIndex" :class="['cell', isHighlighted(rowIndex, colIndex) ? 'highlight' : '']">
+          <button :style="combinedStyles(rowIndex, colIndex)">Sample Button</button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="cell">
+          <button @click="addRow" class="add-btn">+ Add Row</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createApp, ref } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.prod.js';
+
+    createApp({
+      setup() {
+        const baseCSS = ref("border-radius: 30px; padding: 10px 20px;");
+        const rows = ref([
+          `--primary: #FF00FF; 
+--secondary: #00FFFF;`,
+          `--primary: #00FFFF; 
+--secondary: #4B0082;`,
+          `--primary: #FF006E; 
+--secondary: #FF00FF;`
+        ]);
+        const columns = ref([
+          `color: var(--primary); 
+box-shadow: 0 0 10px var(--secondary);`,
+          `background: linear-gradient(
+  to right, 
+  var(--primary), 
+  var(--secondary)); 
+color: #ffffff;`,
+          `border: 2px solid var(--primary);`
+        ]);
+        const highlightedColumn = ref(null);
+        const highlightedRow = ref(null);
+
+        const colors = ["#FF00FF", "#00FFFF", "#4B0082", "#FF006E"];
+        const randomColor = () => colors[Math.floor(Math.random() * colors.length)];
+
+        const randomRowCSS = () => `--primary: ${randomColor()}; 
+--secondary: ${randomColor()};`;
+        const randomColumnCSS = () => {
+          const styles = [
+            `color: var(--primary); 
+box-shadow: 0 0 10px var(--secondary);`,
+            `background: linear-gradient(to right, var(--primary), var(--secondary)); 
+color: #ffffff;`,
+            `border: 2px solid var(--primary);`,
+            `background: radial-gradient(circle, var(--primary), var(--secondary)); 
+color: #ffffff;`,
+            `text-shadow: 2px 2px 5px var(--secondary);`,
+            `border-radius: 50%; background: var(--primary); 
+color: var(--secondary);`
+          ];
+          return styles[Math.floor(Math.random() * styles.length)];
+        };
+
+        const addRow = () => {
+          rows.value.push(randomRowCSS());
+        };
+
+        const addColumn = () => {
+          columns.value.push(randomColumnCSS());
+        };
+
+        const removeRow = (index) => {
+          rows.value.splice(index, 1);
+        };
+
+        const removeColumn = (index) => {
+          columns.value.splice(index, 1);
+        };
+
+        const combinedStyles = (rowIndex, colIndex) => {
+          let style = baseCSS.value;
+          style += rows.value[rowIndex];
+          style += columns.value[colIndex];
+          return style;
+        };
+
+        const highlightColumn = (colIndex) => {
+          highlightedColumn.value = colIndex;
+        };
+
+        const highlightRow = (rowIndex) => {
+          highlightedRow.value = rowIndex;
+        };
+
+        const removeHighlight = () => {
+          highlightedColumn.value = null;
+          highlightedRow.value = null;
+        };
+
+        const isHighlighted = (rowIndex, colIndex) => {
+          return highlightedColumn.value === colIndex || highlightedRow.value === rowIndex;
+        };
+
+        return {
+          baseCSS,
+          rows,
+          columns,
+          addRow,
+          addColumn,
+          removeRow,
+          removeColumn,
+          combinedStyles,
+          highlightColumn,
+          highlightRow,
+          removeHighlight,
+          isHighlighted
+        };
+      }
+    }).mount('#app');
+  </script>
+
+</body>
+</html>
