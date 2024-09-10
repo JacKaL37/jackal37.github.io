@@ -22,20 +22,21 @@ open source full stack AI app developer/tinkerer <br/>
 Part of my daily workflow lately is using my own forked version of https://evolvecode.io/ to futz around and get my programmatic and project development juices flowing. 
 
 Some of the fidgety digital bullshiit I've created:
-- [inkstroke](digitalFidgets/inkstroke.html) - quick inky clicky wonks
-- [fireflies](digitalFidgets/fireflies.html)
-- [tinkleboom](digitalFidgets/tinkleboom.html)
-- [doctree](digitalFidgets/doctree.html)
-- [palettester](digitalFidgets/palettester.html)
-- [binauralfreak](digitalFidgets/binauralfreak.html)
-- [heyguy](digitalFidgets/heyguy.html)
-- [featurecreep](digitalFidgets/featurecreep.html) - this one's all gpt-4o. i just cheered it on telling it to add more features.
-- [simplepom](digitalFidgets/simplepom.html)
-- [marpviewer](digitalFidgets/marpviewer.html)
-- [html2markdown](digitalFidgets/html2markdown.html)
-- [markdownexploder](digitalFidgets/markdownexploder.html)
-- [WelcomeToTheCreativePage](digitalFidgets/WelcomeToTheCreativePage.html) - ai is truly the wow
+- [swatchstyle](digitalFidgets/swatchstyle.html) - contrast different color schemes on css patterns in a user-defined grid.
 - [ShittyScrivener](digitalFidgets/ShittyScrivener.html) - scrivener but shittier
+- [WelcomeToTheCreativePage](digitalFidgets/WelcomeToTheCreativePage.html) - ai is truly the wow
+- [markdownexploder](digitalFidgets/markdownexploder.html)
+- [html2markdown](digitalFidgets/html2markdown.html)
+- [marpviewer](digitalFidgets/marpviewer.html)
+- [simplepom](digitalFidgets/simplepom.html)
+- [featurecreep](digitalFidgets/featurecreep.html) - this one's all gpt-4o. i just cheered it on telling it to add more features.
+- [heyguy](digitalFidgets/heyguy.html)
+- [binauralfreak](digitalFidgets/binauralfreak.html)
+- [palettester](digitalFidgets/palettester.html)
+- [doctree](digitalFidgets/doctree.html)
+- [tinkleboom](digitalFidgets/tinkleboom.html)
+- [fireflies](digitalFidgets/fireflies.html)
+- [inkstroke](digitalFidgets/inkstroke.html) - quick inky clicky wonks
 
 ## Long Form Research Dissemination and Outreach
 
