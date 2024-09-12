@@ -3,6 +3,8 @@ layout: default
 title: DrJKL
 ---
 
+![wordcloud image](media/jklab_wordcloud.png)
+
 # DrJKL
 
 cognitive scientist and phd researcher, <br/>
