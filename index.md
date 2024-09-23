@@ -1,6 +1,5 @@
 ---
 layout: default
-title: DrJKL
 ---
 
 # John K. Lindstedt
