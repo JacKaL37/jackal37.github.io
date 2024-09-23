@@ -3,7 +3,7 @@ layout: default
 title: DrJKL
 ---
 
-<img src="media/jklab_wordcloud.png" style="width: 80%;">
+<img src="media/jklab_wordcloud.png" style="width: 50%; text-align: center;">
 
 # DrJKL
 
