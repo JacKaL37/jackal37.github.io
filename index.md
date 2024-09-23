@@ -3,9 +3,7 @@ layout: default
 title: DrJKL
 ---
 
-<img src="media/jklab_wordcloud.png" style="width: 50%; text-align: center;">
-
-# DrJKL
+# John K. Lindstedt
 
 cognitive scientist and phd researcher, <br/>
 online-async educator and ex-professor, <br/>
@@ -16,6 +14,8 @@ open source full stack AI app developer/tinkerer <br/>
 - [youtube](https://www.youtube.com/@j-k-lab)
 - [linkedin](https://www.linkedin.com/in/johnklindstedt/)
 - [google scholar](https://scholar.google.com/citations?user=40mIgZQAAAAJ)
+
+<img src="media/jklab_wordcloud.png" style="width: 50%; text-align: center;">
 
 ## Digital Fidget tinkering
 
