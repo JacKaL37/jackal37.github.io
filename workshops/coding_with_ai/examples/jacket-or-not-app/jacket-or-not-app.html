@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jacket or Not?</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #000000;
+        color: #ffffff;
+        padding: 50px;
+      }
+
+      .container {
+        background-color: black;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        display: inline-block;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    
+    <div class="container">
+      <h1 id="jacketAnswer">Loading...</h1>
+      <p id="temperature"></p>
+    </div>
+
+    <script>
+      // This function gets the user's location using the browser's Geolocation API.
+      function getUserLocation() {
+        if (navigator.geolocation) {
+          // Geolocation is supported, request the location.
+          navigator.geolocation.getCurrentPosition(success, error); // <- note here that `success` is the function called after this request succeeds
+        } else {
+          // If geolocation is not supported, show an error.
+          document.getElementById("jacketAnswer").textContent =
+            "Geolocation not supported by your browser.";
+        }
+      }
+
+      // This function is called when the browser successfully retrieves the user's location.
+      function success(position) {
+        const lat = position.coords.latitude; // Latitude from the user's location
+        const lon = position.coords.longitude; // Longitude from the user's location
+
+        // Call the function to get the weather data using the user's coordinates.
+        getWeatherData(lat, lon);
+      }
+
+      // This function is called if there's an error retrieving the user's location.
+      function error() {
+        document.getElementById("jacketAnswer").textContent =
+          "Unable to retrieve your location.";
+      }
+
+      // Revised function to use OpenMeteo API instead. It doesn't need API keys for basic usage.
+      function getWeatherData(lat, lon) {
+        const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max`;
+
+        // Use fetch to send a request to the OpenMeteo API.
+        fetch(apiUrl)
+          .then((response) => response.json()) // Convert the response to JSON
+          .then((data) => {
+            console.log(data); // Log the entire response to understand its structure
+            if (data && data.daily && data.daily.temperature_2m_max) {
+              const temp = data.daily.temperature_2m_max[0]; // Extract the current temperature from the API response
+
+              // Call a function to determine the jacket advice based on the temperature.
+              displayJacketAdvice(temp);
+            } else {
+              document.getElementById("jacketAnswer").textContent =
+                "Error: Unexpected weather data format.";
+            }
+          })
+          .catch(() => {
+            document.getElementById("jacketAnswer").textContent =
+              "Error retrieving weather data.";
+          });
+      }
+
+      // This function updates the page with jacket advice based on the temperature.
+      function displayJacketAdvice(temp) {
+        let advice = "";
+        let color = "";
+
+        // Basic logic to give different advice based on temperature ranges.
+        if (temp < 5) {
+          advice = "Yes, wear a winter coat!";
+          color = "cyan"; // Cold
+        } else if (temp < 15) {
+          advice = "You'll need a jacket.";
+          color = "indigo"; // Medium
+        } else if (temp < 25) {
+          advice = "A light sweater or hoodie should do.";
+          color = "blue"; // Warm
+        } else {
+          advice = "No jacket needed, it's warm!";
+          color = "magenta"; // Hot
+        }
+
+        // Display the advice on the page.
+        const jacketAnswerElement = document.getElementById("jacketAnswer");
+        jacketAnswerElement.textContent = advice;
+        jacketAnswerElement.style.color = color;
+        document.getElementById(
+          "temperature"
+        ).textContent = `It's currently ${temp}°C.`;
+      }
+
+      // Start by getting the user's location as soon as the page loads.
+      getUserLocation();
+    </script>
+  </body>
+</html>

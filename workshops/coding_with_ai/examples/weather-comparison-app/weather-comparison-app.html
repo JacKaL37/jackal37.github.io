@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Comparison Tool</title>
+    <style>
+      /* Vaporwave color palette */
+      body {
+        background: linear-gradient(to right, #ff00cc, #333399);
+        font-family: "Courier New", Courier, monospace;
+        color: #fff;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      #map {
+        width: 100%;
+        height: 400px;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+      }
+      .weather-panel {
+        width: 48%;
+        display: inline-block;
+        vertical-align: top;
+        padding: 20px;
+        box-sizing: border-box;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        margin: 10px 0;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        animation-delay: 1s;
+      }
+      #weather-container {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+    </style>
+    <!-- Include Leaflet CSS for map styling -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
+  <body>
+    <!-- Map container -->
+    <div id="map"></div>
+
+    <!-- Weather comparison panels -->
+    <div id="weather-container">
+      <div id="weather-panel-1" class="weather-panel">
+        <!-- Weather data for location 1 will be displayed here -->
+      </div>
+      <div id="weather-panel-2" class="weather-panel">
+        <!-- Weather data for location 2 will be displayed here -->
+      </div>
+    </div>
+
+    <!-- Include Leaflet JS for map functionality -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+      // Initialize the map
+      var map = L.map("map").setView([20, 0], 2); // Centered on the world
+
+      // Add OpenStreetMap tiles
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Variables to store the markers
+      var marker1, marker2;
+
+      // Function to handle map clicks
+      map.on("click", function (e) {
+        if (!marker1) {
+          // Place the first marker
+          marker1 = L.marker(e.latlng).addTo(map);
+          // Fetch and display weather data for the first location
+          fetchWeatherData(e.latlng.lat, e.latlng.lng, "weather-panel-1");
+        } else if (!marker2) {
+          // Place the second marker
+          marker2 = L.marker(e.latlng).addTo(map);
+          // Fetch and display weather data for the second location
+          fetchWeatherData(e.latlng.lat, e.latlng.lng, "weather-panel-2");
+        } else {
+          // If both markers are already placed, clear them and the weather data
+          clearMarkers();
+        }
+      });
+
+      // Function to remove markers and weather data
+      function clearMarkers() {
+        if (marker1) {
+          map.removeLayer(marker1);
+          marker1 = null;
+          document.getElementById("weather-panel-1").innerHTML = "";
+        }
+        if (marker2) {
+          map.removeLayer(marker2);
+          marker2 = null;
+          document.getElementById("weather-panel-2").innerHTML = "";
+        }
+      }
+
+      // emoji weather code function (weather codes from OpenMeteo API)
+      function getEmojiWeatherCode(weatherCode) {
+        switch (weatherCode) {
+          case 0:
+            return "☀️"; // clearsky_day
+          case 1:
+            return "🌙"; // clearsky_night
+          case 2:
+            return "🌤️"; // fewclouds_day
+          case 3:
+            return "🌙☁️"; // fewclouds_night
+          case 45:
+            return "🌥️"; // scatteredclouds_day
+          case 48:
+            return "🌙☁️"; // scatteredclouds_night
+          case 51:
+            return "☁️"; // brokenclouds_day
+          case 53:
+            return "🌙☁️"; // brokenclouds_night
+          case 55:
+            return "🌦️"; // shower_rain_day
+          case 56:
+            return "🌙🌧️"; // shower_rain_night
+          case 61:
+            return "🌧️"; // rain_day
+          case 63:
+            return "🌙🌧️"; // rain_night
+          case 65:
+            return "⛈️"; // thunderstorm_day
+          case 66:
+            return "🌙⛈️"; // thunderstorm_night
+          case 67:
+            return "❄️"; // snow_day
+          case 71:
+            return "🌙❄️"; // snow_night
+          case 73:
+            return "🌫️"; // mist_day
+          case 75:
+            return "🌙🌫️"; // mist_night
+          default:
+            return "🌍"; // default case
+        }
+      }
+
+      // Function to fetch weather data from OpenMeteo API
+      function fetchWeatherData(lat, lon, panelId) {
+        // Replace with actual API call to OpenMeteo
+        // Example: `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+        fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            // Display weather data in the specified panel
+            document.getElementById(panelId).innerHTML = `
+                        <h3>Weather for (${lat.toFixed(2)}, ${lon.toFixed(
+              2
+            )})</h3>
+                        <p>Temperature: ${
+                          data.current_weather.temperature
+                        }°C</p>
+                        <p>Wind Speed: ${
+                          data.current_weather.windspeed
+                        } km/h</p>
+                        <p>Weather: ${getEmojiWeatherCode(
+                          data.current_weather.weathercode
+                        )}</p>
+                    `;
+          })
+          .catch((error) => {
+            console.error("Error fetching weather data:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
