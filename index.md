@@ -39,6 +39,10 @@ Some of the fidgety digital bullshiit I've created:
 - [fireflies](digitalFidgets/fireflies.html)
 - [inkstroke](digitalFidgets/inkstroke.html) - quick inky clicky wonks
 
+
+## Workshop:
+- [Coding with AI](workshops/coding_with_ai.html) - a workshop on how to use AI to code, and how to code AI.
+
 ## Long Form Research Dissemination and Outreach
 
 *to be published in various forms*
