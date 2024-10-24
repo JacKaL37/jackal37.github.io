@@ -14,10 +14,6 @@
         h2 {
             color: #333;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
         li {
             margin-bottom: 10px;
         }
@@ -27,6 +23,7 @@
             border-radius: 5px;
             padding: 5px;
         }
+        
     </style>
 </head>
 <body>
@@ -319,15 +316,47 @@
 <hr>
 
 <h2>AI Pattern: Documenting code (in-line or chat)</h2>
-<p>The AI is going to</p>
+<ul>
+    <li>As with any time you get code from someone else, you want to be able to understand it.</li>
+    <li>So any code the AI gives you that you don't fully get, you can ask it to explain.
+        <ul>
+            <li>Yes, even if you think your question is stupid.</li>
+        </ul>
+    </li>
+    <li>.
+        <ul>
+            <li>If it's something like "make it pink"
+                <ul>
+                    <li>you can just ASK it what to change, don't make it rewrite the whole file</li>
+                </ul>
+            </li>
+            <li>IF it's something more like "can we rework the design to use more whitespace?"
+                <ul>
+                    <li>That's a fairly big ask, and worth the full rewrite</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
 
 <hr>
 
 <h2>AI Pattern: Comment Describing with In-line Completion</h2>
 
+<ul>
+    <li>A great way to steer the in-line completion is to use a comment.</li>
+    <li>For example, if you need a new function to handle some new interaction, describe it with a comment.</li>
+    <li>Then after a short delay, the in-line completion will kick in, and you'll see a preview of the new function.</li>
+    <li>Hitting tab will accept the completion and you can move on.</li>
+</ul>
+
 <hr>
 
-<h2>Debugging</h2>
+<h2>AI Pattern: Debugging errors or wonky behavior</h2>
+
+<ul>
+    <li>You'll quite often hit errors in code executions.</li>
+</ul>
 
 <hr>
 
