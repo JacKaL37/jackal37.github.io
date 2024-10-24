@@ -1,12 +1,19 @@
 
 
+---
+
+[!video](https://www.youtube.com/watch?v=hlCgJZFcc8c)
+
+
+---
+
 ## Greetings!
 - HEY!
 - What are we doing today?
 	- Making a simple webapp, maybe something about the weather. 
 	- But we're doing it with AI tools throughout the entire process. 
-- Around the room: 
-	- How long you been coding, if at all?
+- Around the room, calibrating, chatting: 
+	- How long have you been coding, if at all?
 	- Name the last AI tool you used, if any.
 
 
@@ -60,6 +67,15 @@ Tools:
 ---
 
 ## AI Interactions Ahead:
+
+- Two major forms of interaction with AI tools today:
+    - AI chat-- where you just have a chat in the sidebar 
+    - In-line completion-- where you're typing and the AI is suggesting completions for you 
+      - (this line was written with in-line completion) 
+        - ((so was that parentheticl comment, but NOT this one!))
+    - Both are quite handy, but they have a different feel-- one is very deliberate, one is almost automatic. 
+  
+### Planned Interactions
 - Pre-coding:
 	- Brainstorming-- pick some data about the API that you're interested in using
 - Getting a base file going:
@@ -78,9 +94,36 @@ Tools:
 	- "technical specifications writer"
 	- test-writing
 	- documentation-writing
+	- translating code between languages
 
 ---
 
+## ASIDE: Basic webdev pattern
+- Save the code
+	- CTRL/CMD + S in your IDE -> writes the file to the disk and lets you run it in its current state
+- Run the code
+	- first time: `open` the html file locally in your web browser
+	- after that, just `refresh` the page with `ctrl/cmd + R`
+- iterate!
+	- Build a bit, check to see if it works
+
+simple web dev world: 
+- open your browser
+- pop open the inspector:
+	- right click the page > inspect
+	- `ctrl/cmd + shift + I` or `F12`
+- `inspector` tab:
+	- check on the `html` structure on the page, edit it, do whatever
+	- you can highlight elements
+	- and clicking on them, you can see the `css` applied to that element
+- `console` tab:
+	- check for outputs from your `console.log()` calls-- things you print out yourself
+	- `errors` -- if your code breaks, it explains it here.
+		- line number, error name, stack trace
+		- ^ INCREDIBLE data for the AI to get its hands on ^
+	- also lets you enter `javascript` commands on the fly to test ideas
+
+--- 
 
 ## Active Demo Time!
 
@@ -113,5 +156,39 @@ Now that the idea is a bit more fleshed out...
 - Let's get a basic scaffolding going just using copilot
 	- Yeah, you can totally do this yourself, but let's futz with copilot to make the basic html template for our app
 
+- Now a gut check: test the file-- how good is this?
+  - Great! -- then we can take it and move on!
+  - Good, but I have revisions -- also good, you can iterate with the AI
+  - Awful -- might be best to restart with a fresh chat if it feels like it's totally busted
+
 ---
 
+## AI Pattern: Iteration and Revision
+
+- Once you have a file, but it's not quite right, you can keep the ball rolling by asking for revisions. 
+  - Because it has your whole chat so far, AND the "bad" version, it will have a very strong grasp of what you're doing (usually)
+
+- When iterating with the AI, you want to ask it for *substantial changes*. 
+- If it's something like "make it pink"
+  - you can just ASK it what to change, don't make it rewrite the whole file
+- IF it's something more like "can we rework the design to use more whitespace?"
+  - That's a fairly big ask, and worth the full rewrite
+
+---
+
+## AI Pattern: Documenting code (in-line or chat)
+
+The AI is going to 
+
+
+---
+
+## AI Pattern: Comment Describing with In-line Completion
+
+
+---
+
+## Debugging
+
+
+---

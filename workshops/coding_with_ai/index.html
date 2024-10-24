@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Outline</title>
+</head>
+<body>
+
+<hr>
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/hlCgJZFcc8c" frameborder="0" allowfullscreen></iframe>
+
+<hr>
+
+<h2>Greetings!</h2>
+<ul>
+    <li>HEY!</li>
+    <li>What are we doing today?
+        <ul>
+            <li>Making a simple webapp, maybe something about the weather.</li>
+            <li>But we're doing it with AI tools throughout the entire process.</li>
+        </ul>
+    </li>
+    <li>Around the room, calibrating, chatting:
+        <ul>
+            <li>How long have you been coding, if at all?</li>
+            <li>Name the last AI tool you used, if any.</li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>Installation and setup</h2>
+<p>Tools:</p>
+<ul>
+    <li>web browser:
+        <ul>
+            <li>this is our test environment for the code we're writing</li>
+            <li>this is also where you'll look up APIs</li>
+        </ul>
+    </li>
+    <li>IDE / text editor:
+        <ul>
+            <li>VSCode is the best case</li>
+            <li>Replit is also good! No setup.</li>
+        </ul>
+    </li>
+    <li>AI tools:
+        <ul>
+            <li>VSCode extensions:
+                <ul>
+                    <li>Github Copilot</li>
+                    <li>Github Copilot Chat</li>
+                </ul>
+            </li>
+            <li>Replit has both chat and in-line predictive text enabled by default.</li>
+        </ul>
+    </li>
+    <li>API:
+        <ul>
+            <li>OpenMeteo: live weather data!
+                <ul>
+                    <li>no API keys, no cost</li>
+                    <li>just keep it under 10,000 pings a day and this is a nice API to mess with whenever you need a quick stand-in</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>A couple of simple weather apps I done made the past few days</h2>
+<ul>
+    <li>Quickie walkthrough of <code>Jacket Or Not?</code>
+        <ul>
+            <li>app page</li>
+            <li>code</li>
+            <li>the weather data involved</li>
+        </ul>
+    </li>
+    <li>Quickie walkthrough of <code>Weather Comparison Tool</code>
+        <ul>
+            <li>this one comes with a FULL HOUR DEMO!</li>
+            <li><a href="https://youtu.be/hlCgJZFcc8c">Full Demo - Weather Comparison App</a></li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>API: OpenMeteo</h2>
+<ul>
+    <li>APIs are basically how apps talk to each other.
+        <ul>
+            <li>You want your app to schedule google events? That's a google API.</li>
+        </ul>
+    </li>
+    <li>Page tour:</li>
+    <li>Docs tour
+        <ul>
+            <li>Specifically highlight the <em>call</em> that is generated on that page.</li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>AI Interactions Ahead:</h2>
+<ul>
+    <li>Two major forms of interaction with AI tools today:
+        <ul>
+            <li>AI chat-- where you just have a chat in the sidebar</li>
+            <li>In-line completion-- where you're typing and the AI is suggesting completions for you
+                <ul>
+                    <li>(this line was written with in-line completion)</li>
+                    <li>((so was that parentheticl comment, but NOT this one!))</li>
+                </ul>
+            </li>
+            <li>Both are quite handy, but they have a different feel-- one is very deliberate, one is almost automatic.</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>Planned Interactions</h3>
+<ul>
+    <li>Pre-coding:
+        <ul>
+            <li>Brainstorming-- pick some data about the API that you're interested in using</li>
+        </ul>
+    </li>
+    <li>Getting a base file going:
+        <ul>
+            <li>Quick template: chat with a model get a basic file that you can send more info to later</li>
+            <li>Iteration and revision: continuing to chat to work on a better version of what you're working at.</li>
+        </ul>
+    </li>
+    <li>Developing from there:
+        <ul>
+            <li>Documenting / explaining: Now that you've more or less got someone ELSE'S code (the AI's) that does something in the same ballpark as what you want, tell it to explain its code.</li>
+            <li>Comment describe: prompt the in-line completion using a //comment that describes what you're looking for.
+                <ul>
+                    <li>e.g. "//revised version of the element above ..." or "//loop through"</li>
+                </ul>
+            </li>
+            <li>Debugging: give the model your code and an error message and it can help fix it</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>Maybes</h3>
+<ul>
+    <li>Things we might touch on:
+        <ul>
+            <li>voice-dumping</li>
+            <li><code>system prompts</code></li>
+            <li>"technical specifications writer"</li>
+            <li>test-writing</li>
+            <li>documentation-writing</li>
+            <li>translating code between languages</li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>ASIDE: Basic webdev pattern</h2>
+<ul>
+    <li>Save the code
+        <ul>
+            <li>CTRL/CMD + S in your IDE -> writes the file to the disk and lets you run it in its current state</li>
+        </ul>
+    </li>
+    <li>Run the code
+        <ul>
+            <li>first time: <code>open</code> the html file locally in your web browser</li>
+            <li>after that, just <code>refresh</code> the page with <code>ctrl/cmd + R</code></li>
+        </ul>
+    </li>
+    <li>iterate!
+        <ul>
+            <li>Build a bit, check to see if it works</li>
+        </ul>
+    </li>
+</ul>
+
+<p>simple web dev world:</p>
+<ul>
+    <li>open your browser</li>
+    <li>pop open the inspector:
+        <ul>
+            <li>right click the page > inspect</li>
+            <li><code>ctrl/cmd + shift + I</code> or <code>F12</code></li>
+        </ul>
+    </li>
+    <li><code>inspector</code> tab:
+        <ul>
+            <li>check on the <code>html</code> structure on the page, edit it, do whatever</li>
+            <li>you can highlight elements</li>
+            <li>and clicking on them, you can see the <code>css</code> applied to that element</li>
+        </ul>
+    </li>
+    <li><code>console</code> tab:
+        <ul>
+            <li>check for outputs from your <code>console.log()</code> calls-- things you print out yourself</li>
+            <li><code>errors</code> -- if your code breaks, it explains it here.
+                <ul>
+                    <li>line number, error name, stack trace</li>
+                    <li>^ INCREDIBLE data for the AI to get its hands on ^</li>
+                </ul>
+            </li>
+            <li>also lets you enter <code>javascript</code> commands on the fly to test ideas</li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>Active Demo Time!</h2>
+<p>Let's build something together!</p>
+<p>I suggest we hash it out like this:</p>
+<ul>
+    <li>I'll do some things</li>
+    <li>You try them at home.</li>
+    <li>We chat about it.</li>
+</ul>
+<p>You can follow super closely to what I'm doing, or you can choose your own adventure.</p>
+<p>But keep it closer to simple for the sake of this precious 90 minutes together.</p>
+
+<hr>
+
+<h2>AI Pattern: Brainstorming with Chat</h2>
+<ul>
+    <li>Maybe all you came up with was a vague goal-- "let me do something with "</li>
+    <li>A <code>brainstorming</code> chat pattern has you and the model <em>discussing</em> what you're working on.</li>
+    <li>Outcome: varies, but likely a basic sketch / outline of whatever you're designing.
+        <ul>
+            <li>Advanced: If you want some legitimate system specs, you can ask it to write a <code>technical requirements document</code></li>
+        </ul>
+    </li>
+</ul>
+
+<p>Now that the idea is a bit more fleshed out...</p>
+
+<hr>
+
+<h2>AI Pattern: Quick Draft with Chat</h2>
+<ul>
+    <li>Once you have an idea cooked up, in the same chat, you can ask it to write up a basic draft of the concept.
+        <ul>
+            <li>Things like ""</li>
+        </ul>
+    </li>
+    <li>Let's get a basic scaffolding going just using copilot
+        <ul>
+            <li>Yeah, you can totally do this yourself, but let's futz with copilot to make the basic html template for our app</li>
+        </ul>
+    </li>
+    <li>Now a gut check: test the file-- how good is this?
+        <ul>
+            <li>Great! -- then we can take it and move on!</li>
+            <li>Good, but I have revisions -- also good, you can iterate with the AI</li>
+            <li>Awful -- might be best to restart with a fresh chat if it feels like it's totally busted</li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>AI Pattern: Iteration and Revision</h2>
+<ul>
+    <li>Once you have a file, but it's not quite right, you can keep the ball rolling by asking for revisions.
+        <ul>
+            <li>Because it has your whole chat so far, AND the "bad" version, it will have a very strong grasp of what you're doing (usually)</li>
+        </ul>
+    </li>
+    <li>When iterating with the AI, you want to ask it for <em>substantial changes</em>.
+        <ul>
+            <li>If it's something like "make it pink"
+                <ul>
+                    <li>you can just ASK it what to change, don't make it rewrite the whole file</li>
+                </ul>
+            </li>
+            <li>IF it's something more like "can we rework the design to use more whitespace?"
+                <ul>
+                    <li>That's a fairly big ask, and worth the full rewrite</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<hr>
+
+<h2>AI Pattern: Documenting code (in-line or chat)</h2>
+<p>The AI is going to</p>
+
+<hr>
+
+<h2>AI Pattern: Comment Describing with In-line Completion</h2>
+
+<hr>
+
+<h2>Debugging</h2>
+
+<hr>
+
+</body>
+</html>
